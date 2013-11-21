@@ -1,0 +1,18 @@
+In this directory you need to create 3 directories to enable the salt
+states to function.
+
+1. A directory named "pillar", use pillar-sample as a template.
+Update settings.sls and top.sls file with your values.
+
+2. A directory named "install-media". In there you should place
+your installation media in separate subdirectories.
+
+3. A directory named "licenses". In there you should place
+your commercial licenses in separate subdirectories.
+
+For the install-media and licenses directories, the subdirectories should
+be named to match the names of the salt states that are using those files.
+i.e. salt states in salt/avast/ would use install-media/avast/ and licenses/avast/
+
+Refer to the salt states that you intend to use for the proper naming of your license
+and install-media files.
