@@ -37,11 +37,11 @@ $ sudo /etc/init.d/postgresql start
 
 Replace the user name and password with the credentials that you would like to 
 use and run the following commands:
-$ sudo rabbitmqctl add_user masteruser longmasteruserpassword
-$ sudo rabbitmqctl add_user workeruser longworkeruserpassword
+$ sudo rabbitmqctl add_user phagemasteruser longmasterpassword
+$ sudo rabbitmqctl add_user phageworkeruser longworkerpassword
 $ sudo rabbitmqctl add_vhost vhostname
-$ sudo rabbitmqctl set_permissions -p vhostname masteruser ".*" ".*" ".*"
-$ sudo rabbitmqctl set_permissions -p vhostname workeruser ".*" ".*" ".*"
+$ sudo rabbitmqctl set_permissions -p vhostname phagemasteruser ".*" ".*" ".*"
+$ sudo rabbitmqctl set_permissions -p vhostname phageworkeruser ".*" ".*" ".*"
 
 If the master and worker hosts use different user/pass combinations to 
 communicate with the broker, you must use the commands as written above.  

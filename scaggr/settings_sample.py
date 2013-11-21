@@ -39,7 +39,7 @@ CACHES = {
 }
 
 BROKER_CONF = {
-	'uid'   : 'masteruser',
+	'uid'   : 'phagemasteruser',
 	'pass'  : 'longmasterpassword',
 	'host'	: 'scanmaster',
 	'port'	: '5672',

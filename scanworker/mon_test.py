@@ -11,5 +11,5 @@ def main(app, freq=1.0):
 			recv.capture(limit=None, timeout=None)
 
 if __name__ == '__main__':
-	celery = Celery(broker='amqp://masteruser:longmasteruserpassword@scanmaster/phage')
+	celery = Celery(broker='amqp://phagemasteruser:longmasterpassword@scanmaster/phage')
 	main(celery)

@@ -24,7 +24,7 @@ master-celeryconfig-copy:
 celeryconfig-master-username:
   file.sed:
     - name: {{ pillar['ps_root'] }}/masterceleryconfig.py
-    - before: 'masteruser'
+    - before: 'phagemasteruser'
     - after: '{{ pillar['mq_master_user_name'] }}'
     - limit: "^  'uid' 	: "
     - requre:
@@ -33,7 +33,7 @@ celeryconfig-master-username:
 celeryconfig-master-password:
   file.sed:
     - name: {{ pillar['ps_root'] }}/masterceleryconfig.py
-    - before: 'longmasteruserpassword'
+    - before: 'longmasterpassword'
     - after: '{{ pillar['mq_master_user_passwd'] }}'
     - limit: "^  'pass' 	: "
     - requre:

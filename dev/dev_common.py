@@ -25,7 +25,7 @@ DATABASES = {
 }
 
 BROKER_CONF = {
-  'uid' 	: 'workeruser',
+  'uid' 	: 'phageworkeruser',
   'pass' 	: 'longworkerpassword',
   'host' 	: 'scanmaster',
   'port' 	: '5672',

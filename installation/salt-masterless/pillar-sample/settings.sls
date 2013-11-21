@@ -31,15 +31,15 @@ phage_scan_db_user_passwd: sup3rdup3r
 # Used by rabbitmq-server/init.sls
 # Used by settings.py
 # Used by master celery config(s)
-mq_master_user_name: masteruser
-mq_master_user_passwd: longmasteruserpassword
+mq_master_user_name: phagemasteruser
+mq_master_user_passwd: longmasterpassword
 # Should be equal to worker's vhost name
 mq_master_vhost_name: phage
 
 # Used by rabbitmq-server/init.sls
 # Used by worker celery config
-mq_worker_user_name: workeruser
-mq_worker_user_passwd: longworkeruserpassword
+mq_worker_user_name: phageworkeruser
+mq_worker_user_passwd: longworkerpassword
 # Should be equal to master's vhost name
 mq_worker_vhost_name: phage
 
