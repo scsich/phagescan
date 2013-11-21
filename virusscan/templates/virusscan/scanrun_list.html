@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container">
+<div class="page-header"><h2>All Scans</h2></div>
+<table class="table table-striped">
+	<tr>
+		<th>Sample</th>
+		<th>Filename(s)</th>
+		<th>MD5</th>
+		<th>Submitted On (UTC)</th>
+		<th>Status</th>
+		<th>Result</th>
+	</tr>
+	{% for scan_run in object_list %}
+		<tr>
+			<td><a href="{{ scan_run.sample.get_absolute_url }}">{{ scan_run.sample }}</a></td>
+			<td><p>
+				<small>{{ scan_run.sample.all_filenames|join:", " }}</small></p></td>
+			<td><p><small>{{ scan_run.sample.md5 }}</small></p></td>
+			<td>{{ scan_run.date_started|date:"r" }}</td>
+			<td>{{ scan_run.status}}</td>
+			<td>{% with ls=scan_run sample=scan_run.sample %}{% include "sample/internal_infected_badge_list.html" %}{% endwith %}</td>
+		</tr>
+	{% endfor %}
+</table>
+</div>
+
+{% endblock %}

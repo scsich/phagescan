@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Event>
+  <EventType>TaskStateChanged</EventType>
+  <EventId>0</EventId>
+  <Date>2012-11-04 13:28:54</Date>
+  <TaskID>248</TaskID>
+  <root>
+    <TaskState>Starting</TaskState>
+    <PrevTaskState>Stopped</PrevTaskState>
+    <TaskStateReason>User</TaskStateReason>
+  </root>
+</Event>
+
+<Event>
+  <EventType>TaskStateChanged</EventType>
+  <EventId>1</EventId>
+  <Date>2012-11-04 13:28:54</Date>
+  <TaskID>248</TaskID>
+  <root>
+    <TaskState>Started</TaskState>
+    <PrevTaskState>Starting</PrevTaskState>
+    <TaskStateReason>User</TaskStateReason>
+  </root>
+</Event>
+
+<Event>
+  <EventType>TaskStateChanged</EventType>
+  <EventId>2</EventId>
+  <Date>2012-11-04 13:28:54</Date>
+  <TaskID>248</TaskID>
+  <root>
+    <TaskState>Stopped</TaskState>
+    <PrevTaskState>Started</PrevTaskState>
+    <TaskStateReason>Completion</TaskStateReason>
+  </root>
+</Event>
+

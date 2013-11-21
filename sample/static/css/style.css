@@ -1,0 +1,16 @@
+body{
+    padding-top: 60px;
+}
+
+.preview img {
+    max-height: 50px;
+}
+
+.input-searchsize {
+    width: 250px
+}
+
+.white a {
+    color: white;
+}
+

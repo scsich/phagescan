@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% comment %}
+
+{% endcomment %}
+{% block content %}
+<div class="container">
+<div class="page-header"><h2>Sample List</h2></div>
+	<div>
+		<form action="" method="GET" class="form-search">
+
+			{{ search_form.search_string }}
+			<button type="submit" class="btn" type="btn">Search</button>
+
+		</form>
+
+	</div>
+
+
+
+    <table class="table table-striped">
+        <tr>
+            <th>Filename(s)</th>
+            <th>Digest</th>
+            <th>Submitted On (UTC)</th>
+            <th>Submitted By</th>
+            <th>Threats Detected</th>
+        </tr>
+        {% for sample in object_list %}
+            <tr>
+
+                <td><p><a href="{{ sample.get_absolute_url }}">{{ sample.all_filenames|join:"<br>" }}</a></p></td>
+                <td><p><small>SHA256: {{ sample.sha256 }} <br> MD5: {{ sample.md5 }}</small></p></td>
+                <td>{{ sample.submission_time|date:"r" }}</td>
+                <td>{{ sample.user.username }}</td>
+                <td style="text-align: center;">
+                    {% with result=sample.latest_scan.get_most_informational_scan_result %}
+                        {% include "sample/list_infected_badge.html" %}
+                    {% endwith %}
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+</div>
+
+{% endblock %}

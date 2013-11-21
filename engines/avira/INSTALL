@@ -1,0 +1,133 @@
+
+1. Install necessary OS packages.
+
+If running Ubuntu:
+$ sudo apt-get install $(< [this_directory]/PACKAGES.ubuntu)
+
+If running CentOS:
+TODO
+
+----
+
+2. Acquire Avira Software.
+
+Installation files are available here: 
+http://www.avira.com/en/download/product/avira-server-security
+
+Acquire the Avira AntiVir Server (Unix) version.
+
+NOTE: This product is no longer available.
+
+----
+
+3a. Install Avira.
+
+$ tar -zxf antivir-server-prof.tar.gz
+
+$ cd antivir-server-prof-3.1.3.5-2
+
+NOTE: If you have your license file (HBEDV.KEY) you can put it in this folder 
+now, and it the installer will take care of putting it in place for the 
+installed product.
+
+To do an unattended installation, use the unattended.inf located in the
+ directory with these instructions:
+$ sudo ./install --inf=/path/to/unattended.inf
+
+To do an interactive installation:
+$ sudo ./install
+	[enter] So we can see the license
+	[q] Hit "q" to close the license
+	[y] hit "y" enter to agree to the license
+	[enter] If you copied your license file into the install directory, hit enter
+	[n] Do not create a symlink to avupdate-guard
+	[n] Do not schedule a cron task to auto-update (won't have internet)
+	[n] Do not check for updates once per week
+	[n] Do not install dazukofs
+	[y] Create /home/quarantine
+	[n] do not install the GNOME plugin
+	[n] Do not create a symlink to avguard
+	[y] Set up boot scripts
+	[n] Do not activate SMC support
+	[y] Go ahead and start Avira.
+
+----
+
+3b. Manual license update or installation.  Skip to step 4 if you copied your 
+license file into the install directory in step 3a.
+
+Assuming your license file is named "hbedv_key" and is in the current dir:
+$ sudo cp hbedv_key /usr/lib/AntiVir/guard/avira.key
+$ sudo service avguard restart
+
+You can view the license loaded into Avira by running:
+$ /usr/lib/AntiVir/guard/avlinfo
+
+Then run a test scan to verify that your "AntiVir license" number is correctly 
+recognized in a scan.
+
+----
+
+4. Fix permissions.
+
+Avira needs to run as root so do a setuid on avscan:
+$ sudo chmod 4755 /usr/lib/AntiVir/guard/avscan
+
+Change ownership of /home/quarantine to the PhageScan user.
+$ sudo chown -R [PhageScan_user] /home/quarantine/
+
+----
+
+5. Update definitions.
+
+$ sudo /usr/lib/AntiVir/guard/avupdate-guard --product=Guard
+
+----
+
+6a. Verify correct installation by scanning the EICAR test file and blat.ex_.
+
+Run Avira on test files. The scanner is located at: /usr/lib/AntiVir/guard/avscan
+$ /usr/lib/AntiVir/guard/avscan --batch --alert-action=ignore -v \
+	[Project_root_dir]/engines/generic/test/file/
+
+6b. Successful output should look like the following:
+
+Warning: quarantine directory /home/quarantine/ not accessible
+Avira AntiVir Server (ondemand scanner)
+Copyright (C) 2010 by Avira GmbH.
+All rights reserved.
+
+SAVAPI-Version: 3.1.1.8, AVE-Version: 8.2.10.250
+VDF-Version: 7.11.60.136 created 20130209
+
+AntiVir license: 2224700406
+
+Info: automatically excluding /sys/ from scan (special fs)
+Info: automatically excluding /proc/ from scan (special fs)
+Info: automatically excluding /home/quarantine/ from scan (quarantine)
+scan progress: directory "/home/vmuser/Desktop/phage/engines/generic/test/file/"
+
+  file: /home/vmuser/Desktop/phage/engines/generic/test/file/eicar.com.txt
+    last modified on  date: 2013-02-07  time: 19:57:09,  size: 68 bytes
+    ALERT: Eicar-Test-Signature ; virus ; Contains code of the Eicar-Test-Signature virus
+    ALERT-URL: http://www.avira.com/en/threats?q=Eicar%2DTest%2DSignature
+  no action taken
+
+  file: /home/vmuser/Desktop/phage/engines/generic/test/file/evil.pdf
+    last modified on  date: 2013-02-07  time: 19:57:09,  size: 6705 bytes
+    ALERT: EXP/Pidief.dbk ; exploit ; Contains detection pattern of the exploits EXP/Pidief.dbk
+    ALERT-URL: http://www.avira.com/en/threats?q=EXP%2FPidief%2Edbk
+  no action taken
+
+------ scan results ------
+   directories: 1
+ scanned files: 3
+        alerts: 2
+    suspicious: 0
+      repaired: 0
+       deleted: 0
+       renamed: 0
+         moved: 0
+     scan time: 00:00:01
+--------------------------
+

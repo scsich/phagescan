@@ -1,0 +1,16 @@
+
+A file called nsrl.bloom needs to exist in this directory in order for NRSL queries to work.
+Unfortunately, Git nor Github handles large files like this (100MB) well.
+
+
+You can go about getting this file in two ways:
+a) Generating it from your own copy of nsrl
+python nsrl/generate_bloom.py path_to_all_nsrl_files/
+
+^ the above script will recurse into directories under that and look for NSRLFile.txt which it will include in the bloom filter
+
+b) Pull the file from Narf
+wget http://mass.narfindustries.com/nsrl.bloom
+
+Be warned that there is no automated signing or verification of this file but here is a sha1 sum for you:
+c78dde5c2260dbc89f8b8f23e8e4dc0bddfb7218  nsrl.bloom

@@ -1,0 +1,10 @@
+
+The purpose of this state is to use a single salt command to easily call
+the update state for all engines on a scanworker. Run the following command
+on the salt master:
+
+sudo salt '*worker*' state.sls update-all-engines
+
+For this to work, each engine should have an update.sls file with a set of
+states that executes that engine's definition update function ONLY when
+the engine is installed.

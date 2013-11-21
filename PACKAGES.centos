@@ -1,0 +1,8 @@
+make
+gcc
+gcc-c++
+zlib-devel
+bzip2-devel
+openssl-devel
+ncurses-devel
+python-pip

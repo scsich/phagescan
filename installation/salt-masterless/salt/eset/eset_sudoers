@@ -1,0 +1,1 @@
+ALL	ALL = (ALL:ALL) NOPASSWD: /opt/eset/esets/sbin/esets_update

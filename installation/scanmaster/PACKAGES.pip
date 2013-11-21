@@ -1,0 +1,18 @@
+dulwich
+django==1.5
+django-celery==3.0.23
+django-constance[database]
+django-picklefield
+django-piston
+django-nose
+mercurial
+psycopg2
+boto
+djorm-ext-hstore
+south
+gunicorn
+pybloom
+vcs
+ipython
+moto # used to mock ec2 for testing
+yara>=1.7.6

@@ -1,0 +1,6 @@
+
+The is directory contains helper scripts to reset your database and clean up files
+created by django during development.
+
+Verify usernames, passwords, db names, vhost names, etc before using.
+

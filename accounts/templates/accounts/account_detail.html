@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% comment %}
+
+{% endcomment %}
+{% block content %}
+<div class="container">
+
+<div class="span4">
+	<h4>Basic Stats</h4>
+	<table class="table">
+
+	<tr>
+		<th scope="row">Pending Scans</th>
+		<td>{{ account.get_pending_scans.count }}</td>
+
+	</tr>
+	<tr>
+		<th scope="row">My Samples</th>
+		<td>{{ account.get_samples.count }}</td>
+
+	</tr>
+	<tr>
+		<th scope="row">Total Samples</th>
+		<td>{{ samples.count }}</td>
+
+	</tr>
+	<tr>
+		<th scope="row">Number of Scans</th>
+		<td>{{ account.get_scans.count }}</td>
+	</tr>
+</table></div>
+</div>
+<div class="container">
+<div class="span4">
+<h4>API Key</h4>
+    <table class="table">
+    <tr>
+        <td>{{ account.get_api_key }}</td>
+		<td> <p><a href="{% url 'generate-key' %}" class="btn btn-primary"><i class="icon-repeat"></i></a></p></td>
+    </tr>
+</table></div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,67 @@
+
+1. Install necessary OS packages.
+
+If running Ubuntu:
+$ sudo apt-get install $(< [this_directory]/PACKAGES.ubuntu)
+
+If running CentOS:
+TODO
+
+----
+
+2. Acquire a copy of ESET File Security for Linux.
+
+A link to the installer is located here: 
+http://www.eset.com/us/download/business/
+
+Go to File Security, Click "I have a license" next to the 
+Linux/BSD/Solaris version.  A login will be required.
+
+----
+
+3.  Extract the archive.
+
+You should have downloaded a .bin file, e.g. esets.amd64.deb.bin.  
+
+Extract the file by executing it:
+$ chmod +x [file_you_downloaded]
+$ [file_you_downloaded]
+
+Its going to ask you to hit enter, view a license agreement, hit "q", then hit 
+"y" to agree to the terms and conditions.
+
+----
+
+4. Install ESET File Security for Linux.
+
+If running Ubuntu:
+    Install the package:
+    $ sudo dpkg -i [/path/to/]esets-4.0.8.amd64.deb
+
+    Import the license file that you were provided when you registered the product:
+    $ sudo /opt/eset/esets/sbin/esets_lic --import [your_license_file]
+
+    Run a manual scan once via command (This sets up some config files needed to scan):
+    $ sudo /opt/eset/esets/sbin/esets_scan --clean-mode=none --no-quarantine /opt/eset/esets/sbin/esets_scan
+
+If running CentOS:
+TODO
+
+----
+
+5. Update definitions.
+
+To update, Enter acquired username/password information into the global section 
+of main configuration file /etc/opt/eset/esets/esets.cfg
+
+    av_update_username=[USERNAME]
+    av_update_password=[PASSWORD]
+
+Execute an update. This may appear like it's hung, but it just takes a while.
+$ sudo /opt/eset/esets/sbin/esets_update
+
+----
+
+6. Install a new license (when you renew)
+
+sudo /opt/eset/esets/sbin/esets_lic --import=/path/to/new/license/file

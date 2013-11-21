@@ -1,0 +1,16 @@
+<h3>OfficeMalScanner</h3>
+    <table class="table table-striped">
+    {% if result.metadata.oms_rawresult_scan_debug and result.metadata.oms_rawresult_info %}
+
+        <tr><th scope="row">OfficeMalScanner.exe &lt;sample&gt; scan debug</th></tr>
+        <tr><td><pre>{{ result.metadata.oms_rawresult_scan_debug }}</pre></td></tr>
+
+        <tr><th scope="row">OfficeMalScanner.exe &lt;sample&gt; info</th></tr>
+        <tr><td><pre>{{ result.metadata.oms_rawresult_info }}</pre></td></tr>
+
+    {% elif result.metadata.engine %}
+        <tr><th scope="row">N/A to this sample</th></tr>
+    {% else %}
+        
+    {% endif %}
+</table>

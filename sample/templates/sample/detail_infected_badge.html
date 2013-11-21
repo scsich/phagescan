@@ -1,0 +1,43 @@
+{% comment %}
+
+{% endcomment %}
+
+{% if result %}
+    {% if result.scan_failed %}
+        <span class="badge badge-inverse" ><a href="#" id="badge-{{ result.scanner_type.pk }}">Scan Failed</a></span>
+        <div class="modal hide fade" id="traceback-{{ result.scanner_type.pk }}">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h3>{{ result.scanner_type }} traceback</h3>
+            </div>
+            <div class="modal-body">
+                <pre>{{ result.traceback }}</pre>
+            </div>
+            <div class="modal-footer">
+
+
+            </div>
+
+        </div>
+        {# attach an on click to the badge above that gives us an error popup #}
+        <script type="text/javascript">
+            $('#badge-{{ result.scanner_type.pk }}').on('click', function() {
+                $('#traceback-{{ result.scanner_type.pk }}').modal('show');
+            });
+        </script>
+    {% elif result.pending %}
+        <span class="badge badge-inverse">Pending</span>
+    {% else %}
+        {% if result.metadata.infected_string %}
+            <span class="badge badge-important">{{ result.metadata.infected_string }}</span>
+        {% else %}
+            <span class="badge badge-success">Clean</span>
+        {% endif %}
+    {% endif %}
+{% elif sample %}
+    {% if sample.pending_virus_scans %}
+        <span class="badge badge-warning">Scan In Progress</span>
+    {% else %}
+        <span class="badge badge-inverse">Scan Queued</span>
+    {% endif %}
+{% endif %}

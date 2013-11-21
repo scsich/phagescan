@@ -1,0 +1,8 @@
+git
+clamav
+postgresql
+postgresql-server-dev-9.1
+postgresql-contrib-9.1	
+rabbitmq-server	
+nginx
+

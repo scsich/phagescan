@@ -1,0 +1,1 @@
+ALL	ALL = (ALL:ALL) NOPASSWD: /root/av_sig_updater.sh sophos, /usr/bin/unzip

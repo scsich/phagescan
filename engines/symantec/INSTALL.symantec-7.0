@@ -1,0 +1,157 @@
+
+0. Forward
+
+This guide assumes that you've already completed the steps defined in
+[Project_root_dir]/installation/scanworker/INSTALL.CentOS
+
+This guide was developed against Symantec Protection Engine for Network Attached Storage v7.0 on a
+CentOS 6 / RHEL 6 based system.
+
+CentOS 6.3 was installed with the "Minimal" option selected and then updated with sudo yum update.
+
+NOTE: The host must have 4GB of RAM or more. Else the Symantec engine install will fail!
+
+----
+
+1. Install prereqs.
+  $ sudo yum install $(< [Project_root_dir]/engines/symantec/PACKAGES.centos)
+
+Download latest 32-bit java JRE:
+  $ curl -L -o jre-7u15-linux-i586.rpm http://javadl.sun.com/webapps/download/AutoDL?BundleId=74771
+
+Install JRE:
+  $ sudo rpm -i jre-7u15-linux-i586.rpm
+
+Note: you will see 7 error messages about "Could not open input file.. .pack". Ignore those.
+The JRE is installed correctly and works correctly.
+
+----
+
+3. Acquire a copy of Symantec Protection Engine for Network Attached Storage v7.x for linux. 
+
+You can get the .zip or .iso. The .zip is smaller and easier to work with. 
+
+  $ unzip Symantec_Protection_Engine_NAS_7.0.0.46_Linux_IN.zip
+
+It creates a "SPE_NAS" directory.
+
+----
+
+4.  Create a no-ask-questions file so you can do the silent-install
+
+4a.
+Create AdminPassword:
+
+  $ cd SPE_NAS/Symantec_Protection_Engine/Silent_Install/RedHat/
+  $ java -jar xmlmodifier.jar -e <pt_password>
+
+   As an example, use "mypass" for the pt_password. And save the encrypted result.
+
+4b.
+Edit the response file 
+
+  $ cd SPE_NAS/Symantec_Protection_Engine/Silent_Install/RedHat
+  $ chmod +w response
+  $ vi response 
+
+It should contain this following (substitute the AdminPassword value created in step 4a):
+
+AdminPort=0
+AdminPassword=<put encrypted AdminPassword here>
+SSLPort=0
+InstallDir=/opt/SYMCScan
+User=avuser
+JavaCmd=/usr/java/default/bin/java
+JavaBinDir=/usr/java/default/bin
+JRELibDir=/usr/java/default/lib/i386
+Upgrade=NONE
+CanRelocate=1
+EnableFilteringAndDownloadDefinitions=false
+
+4c.
+Convert response to have unix EOL chars. (Install will fail with non-unix EOL chars)
+  $ sudo yum install dos2unix
+  $ dos2unix response
+
+4d.
+Save response file to /tmp as no-ask-questions
+
+  $ chmod -w response
+  $ cp response /tmp/no-ask-questions
+
+----
+
+5.  Install the Symantec Protection Engine:
+
+  $ cd SPE_NAS/Symantec_Protection_Engine/RedHat
+  $ sudo sh SymantecProtectionEngine.sh
+
+   Note: it should automatically pick up the /tmp/no-ask-questions file.
+   You may see an error about lsb_release command not found. Ignore that.
+
+----
+
+6. Registration
+
+Install the license file Symantec provided.  It should be a .slf file.
+
+  $ sudo su avuser
+  $ cp file.slf /opt/Symantec/Licenses/
+
+----
+
+7. Update defns using the Intelligent Updater (IU):
+
+Download the latest defn update file:
+  $ curl -O ftp://ftp.symantec.com/public/english_us_canada/antivirus_definitions/norton_antivirus/20121218-002-unix.sh
+
+   Note: The file we want is the latest *-unix.sh (not the -unix64.sh)
+   The file pattern is YYYYMMDD-###-unix.sh, so use today's date.
+
+Run the installer:
+  $ sudo sh ./20121218-002-unix.sh
+
+ The new defs will be put into /opt/Symantec/virusdefs/incoming/
+
+Stop the symcscan service:
+  $ sudo service symcscan stop
+
+Delete the old defs:
+  $ sudo su avuser
+  $ cd /opt/SYMCScan/bin/definitions/AntiVirus/VirusDefs/
+  $ rm -f *
+
+Copy in the new defs and fix perms (still as avuser):
+  $ cp /opt/Symantec/virusdefs/incoming/ . 
+  $ chmod 440 *
+  $ chown avuser:avdefs *
+
+Start the symcscan service:
+  $ sudo service symcscan start
+
+----
+
+8. Disable LiveUpdater, it doesn't work.
+
+   LiveUpdater is enabled by default and will run every 2 hours. We should disable it upon install.
+     * XPATH=/liveupdate/schedules/enabled/@value
+     * java -jar xmlmodifier.jar -s XPath newvalue XMLfile
+
+  $ sudo su avuser
+  $ cd /opt/SYMCScan/bin
+  $ java -jar xmlmodifier.jar -s /liveupdate/schedules/enabled/@value false liveupdate.xml
+
+----
+
+9. Test symantec scanning engine
+
+  $ sudo service symcscan restart
+  $ sudo su avuser
+  $ /opt/SYMCScan/ssecls/ssecls -mode scan -onerror leave -details -verbose [FILE]
+
+Test Symantec scanner on any file (except ssecls).
+
+
+----
+
+Symantec install is complete.

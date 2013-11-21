@@ -1,0 +1,187 @@
+
+1. Install necessary OS packages.
+
+If running Ubuntu:
+$ sudo apt-get install $(< [this_directory]/PACKAGES.ubuntu)
+
+If running CentOS:
+TODO
+
+----
+
+2. Acquire Kaspersky Endpoint Security for Linux. 
+
+It is available here:
+http://www.kaspersky.com/downloads/productupdates/downloads-endpoint-security-linux
+
+Select the package best fit for your distribution.
+
+----
+
+3. Acquire a license file.
+
+If you are using a purchased license, ensure there is a copy of the file on this host.
+
+If you require a trial (30-day) .key, keep reading, else skip to the next step.
+
+Kasperky offers trial (30-day) .keys, but the process obtaining them is 
+somewhat convoluted. Kaspersky does not offer trial .keys alongside Kaspersky 
+Endpoint for Linux downloads.  Instead you must acquire a key by showing 
+interest and filling out the form for Kaspersky Business Space Security:
+http://usa.kaspersky.com/products-services/business/business-space-security#tab3
+
+After filling out the form (a valid e-mail address does not appear to be 
+required), you're brought to a page that offers several links, one of which is 
+a trial .key.  Download it to a location you'll remember. It will usually be
+named 'kaspersky.key', but the name does not matter.
+
+----
+
+4. (Possibly) Extract the archive.  
+
+Depending on the download option selected, two .debs (or the equivalent) 
+might be enclosed:
+	kes4lwks_<version_number>_i386.deb
+	klnagent_<version_number>_i386.deb
+
+We only care about the first package.  The second package is used for 
+installing the Kaspersky Network Agent.  The Agent is used to connect the 
+endpoint to a Kaspersky Administration Kit and is not applicable to our 
+purposes.
+
+These packages might also be offered individually.
+
+----
+
+5. Install Kaspersky Endpoint Security for Linux.
+
+If running Ubuntu:
+$ sudo dpkg -i kes4lwks_*_i386.deb
+
+This is not common, but if you are on a 64-bit installation and you 
+encounter an error about architecture mismatch, force the install:
+
+$ sudo dpkg -i --force-architecture kes4lwks_*_i386.deb
+
+Forcing the architecture should work, as per the Kaspersky installation manual.
+
+If running CentOS:
+TODO
+
+----
+
+6. Update unattended installation settings file (post_install.conf).
+
+This file is located in the current directory.
+You only need to update one line in this file.
+The line with the path to the kaspersky license file must be updated
+to point to the actual license file (kaspersky.key). The actual name
+of the file does not matter.
+
+----
+
+7. Set up Kaspersky.
+
+Execute the Kaspersky setup script to begin the unattended installation:
+
+$ sudo /opt/kaspersky/kes4lwks/bin/kes4lwks-setup.pl  \
+     --auto-install=/path/to/post_install.conf
+
+When that finishes, skip to the next step.
+
+If you have problems with the unattended installation, you can do an interactive
+installation by doing the following:
+
+$ sudo /opt/kaspersky/kes4lwks/bin/kes4lwks-setup.pl
+
+- accept the EULA: YES (or stop here)
+- specify locale: DEFAULT
+- enter the path to your .key file that you acquired in step #2: VARIES
+- configure proxy settings: VARIES
+- download the latest databases: YES
+- configure scheduled updates: NO
+- kernel-level real-time protection module: NO (unnecessary for our purposes)
+    - would you like to disable real-time protection? YES
+
+If Kaspersky detects a SAMBA server:
+- enable protection on the SAMBA server: NO (unnecessary for our purposes)
+- specify path to smbd: CANCEL
+
+- Would you like to load kes4lwks-qtgui at desktop startup by default? NO
+
+If you need to replace your Kaspersky license (e.g. move from trial to 
+commercial), issue the following:
+$ /opt/kaspersky/kes4lwks/bin/kes4lwks-control --revoke-active-key
+$ /opt/kaspersky/kes4lwks/bin/kes4lwks-control --install-active-key <path_to_your_new_key_file>
+$ /opt/kaspersky/kes4lwks/bin/kes4lwks-control --query-status
+
+----
+
+8. Fix permissions.
+
+Mark the Kaspersky control binary as setuid root (0).  This is necessary 
+until a more fine-grained permissions approach is developed.  This binary 
+should already be owned by root.
+$ sudo chmod +s /opt/kaspersky/kes4lwks/bin/kes4lwks-control
+
+----
+
+9. Disable real-time protection.
+
+Despite having chosen to disable real-time protection, the setup script will
+say that it started the real-time protection service.  Just in case something 
+is running and attempting real-time protection (it should fail without
+the requisite kernel modules), we'll explicitly stop it:
+$ /opt/kaspersky/kes4lwks/bin/kes4lwks-control --stop-task 8
+
+NOTE: Real-time protection is always task 8, or is at least stable enough to be 
+mentioned explictly in the manual.
+
+----
+
+10. Update definitions.
+
+$ /opt/kaspersky/kes4lwks/bin/kes4lwks-control --set-settings Update -N \
+	CommonSettings.SourceType=KLServers
+$ /opt/kaspersky/kes4lwks/bin/kes4lwks-control --start-task Update -N -F /tmp/kes4lwks-update.log
+$ /opt/kaspersky/kes4lwks/bin/kes4lwks-control --progress Update -N
+
+
+Verify updates:
+$ /opt/kaspersky/kes4lwks/bin/kes4lwks-control --get-stat Update
+
+----
+
+11. Verify installation.
+
+11a. Create an On-Demand Scan (ODS):
+$ /opt/kaspersky/kes4lwks/bin/kes4lwks-control --create-task test_task \
+	--use-task-type=ODS
+
+'test_task' is an abritrarily chosen name.  We will use it in the next several 
+commands.
+
+11b. Add the directory containing the test files to the ODS and tell Kaspersky 
+that we don't want to quantine or otherwise remove "infected" files:
+
+$ /opt/kaspersky/kes4lwks/bin/kes4lwks-control --set-settings test_task -N \
+    ScanScope.AreaPath.Path=[Project_root_dir]/engines/generic/test/file/ \
+    ScanScope.ScanSettings.InfectedFirstAction=skip
+
+11c. Start the ODS:
+$ /opt/kaspersky/kes4lwks/bin/kes4lwks-control --start-task test_task -N -W
+
+11d. Read the output printed to the console.  The EICAR file should be found to 
+be Virware, evil.pdf should be Trojware, and blat.ex_ should be called Riskware.
+
+11e. Delete the task.
+$ /opt/kaspersky/kes4lwks/bin/kes4lwks-control --delete-task test_task -N
+
+----
+
+12. Install a new key
+
+When it comes time to renew the license, you'll have to install a new key file.
+The key file comes in a .zip from the vendor and has a name like 24958C4D.key.
+
+$ /opt/kaspersky/kes4lwks/bin/kes4lwks-control --install-active-key /path/to/new/file.key

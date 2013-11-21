@@ -1,0 +1,23 @@
+$ python pdfid.py ../test/file/SAMPLE.evil_no_javascript
+PDFiD 0.0.12 ../test/file/SAMPLE.evil_no_javascript
+ PDF Header: %PDF-1.5
+ obj                    8
+ endobj                 8
+ stream                 1
+ endstream              1
+ xref                   1
+ trailer                1
+ startxref              1
+ /Page                  1(1)
+ /Encrypt               0
+ /ObjStm                0
+ /JS                    0
+ /JavaScript            0
+ /AA                    0
+ /OpenAction            0
+ /AcroForm              1
+ /JBIG2Decode           0
+ /RichMedia             0
+ /Launch                0
+ /EmbeddedFile          1(1)
+ /Colors > 2^24         0

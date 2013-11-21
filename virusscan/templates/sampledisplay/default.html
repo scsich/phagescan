@@ -1,0 +1,22 @@
+{% comment %}
+Stripped down default box for md scanner that doesn't have a default template written
+{% endcomment %}
+<div class="span12">
+	<h3>{{ result.scanner_type.get_short_name }}</h3>
+	{% with result=latest_metadata_scan.get_oms_scan %}
+
+		{% if result.metadata.engine and result.metadata.rawresult  %}
+			<table class="table table-striped">
+				<tr>
+					<td>
+						<pre>{{ result.metadata.oms_rawresult }}</pre>
+					</td>
+				</tr>
+			</table>
+		{% elif result.metadata.engine %}
+			<h4>
+				<small>N/A to this sample</small>
+			</h4>
+		{% endif %}
+	{% endwith %}
+</div> {# span #}

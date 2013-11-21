@@ -1,0 +1,17 @@
+
+1. Install necessary OS packages.
+
+If running Ubuntu:
+$ sudo apt-get install $(< [this_directory]/PACKAGES.ubuntu)
+
+If running CentOS:
+TODO
+
+2. Download and extract the OfficeMalScanner.zip file.
+
+$ cd ~/
+$ wget http://www.reconstructer.org/code/OfficeMalScanner.zip
+$ sudo mkdir /opt/oms
+$ cd /opt/oms
+$ sudo unzip ~/OfficeMalScanner.zip
+

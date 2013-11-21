@@ -1,0 +1,206 @@
+{% extends "base.html" %}
+{% comment %}
+
+{% endcomment %}
+{% load tz %}
+
+{% block content %}
+
+	{#todo fill in sample details and pending scans#}
+
+	<div class="container" xmlns="http://www.w3.org/1999/html">
+		<div class="page-header">
+			<h2>Report for <i>{{ sample_object.all_filenames|join:", " }}</i></h2>
+		</div>
+		{% include "message.html" %}
+
+		{# BEGIN Sample Info and Result Breakdown row #}
+		<div class="row-fluid">
+			<div class="span12">
+				<div class="row-fluid">
+
+					{# BEGIN Sample Information box #}
+					<div class="span6">
+
+						<table class="table table-striped">
+							<tr>
+								<th scope="row">MD5</th>
+								<td>
+									<p>
+										<small>{{ sample_object.md5 }}</small>
+									</p>
+								</td>
+							</tr>
+							<tr>
+								<th scope="row">SHA256</th>
+								<td>
+									<p>
+										<small>{{ sample_object.sha256 }}</small>
+									</p>
+                                    <p>
+                                        <a href="{{ sample_object.generate_virus_total_url }}" target="_blank">Check With Virus Total</a><small>(hash only)</small>
+                                    </p>
+								</td>
+							</tr>
+							<tr>
+								<th scope="row">Filesize</th>
+								<td>
+									<p>
+										<small>{{ sample_object.get_view_properties.size }}</small>
+									</p>
+								</td>
+							</tr>
+							<tr>
+								<th scope="row">Submitted On (UTC)</th>
+								<td>
+									<p>
+										<small>{{ sample_object.submission_time|date:"r" }}</small>
+									</p>
+								</td>
+							</tr>
+
+							<tr>
+								<th scope="row">Last Scanned
+									<div id="rescan-buttons">
+										<p><a href="{% url 'sample-rescan' slug=sample_object.sha256 %}"
+										      class="btn btn-primary"><i class="icon-repeat"></i> Re-Scan</a></p>
+									</div>
+								</th>
+								<td>
+									<p>
+										<small>{{ sample_object.latest_scan.date_started|date:"r" }}</small>
+									</p>
+								</td>
+							</tr>
+						</table>
+
+					</div>
+					{# END Sample Information box #}
+
+					{# BEGIN Scan Result Breakdown box #}
+					<div class="span6">
+
+						{% with scan_run=sample_object.latest_scan %}
+
+							{% if scan_run %}
+								{% with scan_results=scan_run.scanrunresult_set.get_evilness infected=scan_results.get_infected not_infected=scan_results.get_not_infected failed=scan_results.get_failed %}
+
+									<div id="scanner_breakdown" class="">
+										<table class="table table-striped">
+											{% load scanner_result_sort %}
+											{% for result in scan_results.all|order_by_engine %}
+												<tr>
+													<th scope="row">{{ result.scanner_type }}</th>
+													<td>{% include "sample/detail_infected_badge.html" %}</td>
+													<td>
+														<p>
+															<small>
+																{{ result.metadata.engine }}
+																{% if result.metadata.definitions %}
+																	{{ result.metadata.definitions }}
+																{% endif %}
+															</small>
+														</p>
+													</td>
+													{# todo report versions from scanners #}
+												</tr>
+											{% endfor %}
+										</table>
+									</div>
+								{% endwith %}
+							{% else %} {# if scan_run #}
+								{# todo: add UI to show pending status #}
+							{% endif %}
+						{% endwith %}
+					</div>
+					{# END Scan Result Breakdown box #}
+				</div>
+				{# row-fluid #}
+			</div>
+			{# span12 #}
+		</div>
+		{# row-fluid #}
+
+		<hr/>
+
+			<div class="row-fluid" id="metadata-area">
+			{% with latest_metadata_scan=sample_object.latest_scan %}
+
+				{# this used to lay out MD results in order of their result being delivered to the master worker #}
+				{# such ordering is arbitrary and breaks the UI inconsistently. #}
+				{# it is replaced with a static layout for now.  in the future, we should make this dynamic based #}
+				{# on anticipated usefulness of the MD engine results as determined by python-magic #}
+
+				{# static layout for now: #}
+				{# PDFiD | OPAF + Graphviz #}
+				{# OMS #}
+
+				{# NOTE: this requires all MD engines to be installed, but it's still an improvement from before #}
+
+				{# PDFiD box #}
+				<div class="span3">
+					{% with result=latest_metadata_scan.get_pdfid_scan %}
+						{% with template=result.scanner_type.get_sample_detail_display_template %}
+							{% if template %}
+								{% include template %}
+							{% endif %}
+						{% endwith %}
+					{% endwith %}
+				</div> {# PDFiD box #}
+
+				<div class="span6">
+					{% with result=latest_metadata_scan.get_peid_scan %}
+						{% with template=result.scanner_type.get_sample_detail_display_template %}
+							{% if template %}
+								{% include template %}
+							{% endif %}
+						{% endwith %}
+					{% endwith %}
+				</div> {# PEiD box #}
+			</div> {# row-fluid #}
+
+			<div class="row-fluid" id="metadata-area">
+				{# OPAF box #}
+				<div class="span9">
+					{% with result=latest_metadata_scan.get_opaf_scan %}
+						{% with template=result.scanner_type.get_sample_detail_display_template %}
+							{% if template %}
+								{% include template %}
+							{% endif %}
+						{% endwith %}
+					{% endwith %}
+				</div> {# OPAF box #}
+			</div> {# row-fluid #}
+
+
+			<div class="row-fluid" id="metadata-area">
+
+					{# OMS box #}
+					<div class="span12">
+						{% with result=latest_metadata_scan.get_oms_scan %}
+							{% with template=result.scanner_type.get_sample_detail_display_template %}
+								{% if template %}
+									{% include template %}
+								{% endif %}
+							{% endwith %}
+						{% endwith %}
+					</div>
+					{# OMS box #}
+
+			</div> {# row-fluid #}
+
+				{# old way (for reference).  this varied the UI based on a race condition #}
+				{#                {% for md_scan_result in latest_metadata_scan.scanrunresult_set.all %}#}
+				{#                    {% with md_scan_result_display_template=md_scan_result.scanner_type.get_sample_detail_display_template %}#}
+				{#	must do if check here or include will fail and propagate error to front #}
+				{#                        {% if md_scan_result_display_template %}#}
+				{#                            {% include md_scan_result_display_template %}#}
+				{#                        {% endif %}#}
+				{#                    {% endwith %}#}
+				{#                {% endfor %}#}
+
+
+			{% endwith %}
+	</div> {# container #}
+
+{% endblock %}

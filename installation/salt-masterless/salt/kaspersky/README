@@ -1,0 +1,37 @@
+
+These salt states will install and configure the Kaspersky engine and libraries on
+an Ubuntu Linux host. They will also update the A/V signatures to the latest version.
+These instructions assume that your vm was built using vagrant with the
+salt-vagrant provisioner.
+
+
+Before running these salt states, you need to do the following:
+
+1. Place install media into installation/install-media/kaspersky/
+
+The Kaspersky engine package: kes4lwks_8.0.1-50_i386.deb
+
+2. Place license into installation/licenses/kasperpsky/
+
+Your Kaspersky license file: kaspersky.key
+
+The Kaspersky package you have to download from the Kaspersky website. The license file
+you should have received as an email attachment when you bought your Kaspersky license.
+
+The files have to be named exactly as written in the pillar file pillar/settings.sls. 
+If you wish to use a different version, then you should update the associated 
+pillar variables in pillar/settings.sls.
+
+
+Finally, you can implement these salt states by running the following command
+from within the vm:
+
+$ sudo salt-call state.sls kaspersky
+
+If all of the output from each state is colored teal, then all states were
+successful. If any of the output from a state is colored red, then you have
+a problem to resolve.
+
+Note: The last salt state will perform a signature update. This will take
+several minutes, so be patient.
+

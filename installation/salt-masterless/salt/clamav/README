@@ -1,0 +1,16 @@
+
+These salt states will install and configure the ClamAV engine and libraries on
+an Ubuntu Linux host. They will also update the A/V signatures to the latest version.
+These instructions assume that your vm was built using vagrant with the
+salt-vagrant provisioner.
+
+
+You can implement these salt states by running the following command
+from within the vm:
+
+$ sudo salt-call state.sls clamav
+
+If all of the output from each state is colored teal, then all states were
+successful. If any of the output from a state is colored red, then you have
+a problem to resolve.
+

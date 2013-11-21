@@ -1,0 +1,57 @@
+
+
+==== start up =====
+MASTER:
+DJANGO_SETTINGS_MODULE=scaggr.settings_dev celeryd --config=masterceleryconfig -E -B -l debug -n masternode.m
+DJANGO_SETTINGS_MODULE=scaggr.settings_dev celeryd --config=resultsceleryconfig -E -B -l debug -n masternode.r
+DJANGO_SETTINGS_MODULE=scaggr.settings_dev celeryd --config=periodicceleryconfig -E -B -l debug -n masternode.p
+
+WORKER:
+(linux)
+celeryd -l DEBUG -E --config=workerceleryconfig -n workernode
+
+(windows)
+c:\psvirtualenv\scripts\activate
+cd <Project_root_dir>
+celeryd -l DEBUG -E --config=workerceleryconfig -P solo -n workernode
+
+DJANGO:
+python manage.py runserver -v 3 0.0.0.0:8000 --settings=scaggr.settings_dev
+===================
+
+
+==== get listing of current queues, etc ====
+DJANGO_SETTINGS_MODULE=scaggr.settings_dev celeryctl inspect report --config=masterceleryconfig
+============================================
+
+
+==== re-apply salt changes to a vagrant vm ====
+$ cd /vagrant
+$ sudo salt-call state.highstate
+===============================================
+
+
+==== debug celery with pycharm ====
+1) put this somewhere in the code you want to debug
+
+PYCHARM 2.6:
+# DEBUG
+from pydev import pydevd
+pydevd.settrace('localhost', port=2981, stdoutToServer=True, stderrToServer=True)
+
+PYCHARM 2.7:
+# DEBUG
+import pydevd
+pydevd.settrace('localhost', port=2981, stdoutToServer=True, stderrToServer=True)
+
+2) install pycharm-debug.egg
+$ easy_install [pycharm_root_dir]/pycharm-debug.egg
+
+3) start the remote debugger listener
+=====================================
+
+==== install / set up an engine with salt ====
+
+sudo salt-call state.sls <engine_name>
+
+=============================

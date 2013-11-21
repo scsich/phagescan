@@ -1,0 +1,189 @@
+<h3>Open PDF Analysis Framework (OPAF)</h3>
+
+<table class="table table-striped">
+	{#  todo: hacky (un)supported test case #}
+	{% if result.scan_failed %}
+		<tr>
+			<th scope="row">N/A to this sample</th>
+		</tr>
+	{% else %}
+		{% for image in result.image_output.all %}
+			<tr>
+				<th scope="row"><a href="{{ image.file.url }}" target="_blank">{{ image.filename }}</a></th>
+			</tr>
+			<tr>
+				<td><a href="{{ image.file.url }}" target="_blank"><img src="{{ image.file.url }}" width="100%"/></a></td>
+			</tr>
+		{% endfor %}
+		{% for file in result.file_output.all %}
+			{% if file.filename == 'output.gexf' %}
+				<script type="text/javascript">
+                    function init() {
+                        // Instantiate sigma.js and customize rendering (jQuery-ified):
+                        var sigInst = sigma.init($('#opaf-graph')[0]).drawingProperties({
+                        //var sigInst = sigma.init(document.getElementById('opaf-graph')).drawingProperties({
+                            // generic
+                            borderSize:             1,
+                            defaultBorderView:      "always",
+                            // edges
+                            edgeColor:              "#444",
+                            //defaultEdgeType:        "curve",
+                            // labels
+                            labelThreshold:         6,
+                            defaultLabelSize:       14,
+                            defaultLabelColor:      '#fff',
+                            defaultLabelHoverColor: '#000',
+                            // nodes
+                            defaultNodeColor:       "#0f0",
+                            defaultNodeBorderColor: "#fff"
+                        }).graphProperties({
+                            minNodeSize: 1,
+                            maxNodeSize: 6,
+                            minEdgeSize: 1,
+                            maxEdgeSize: 1
+                        }).mouseProperties({
+                            maxRatio: 4
+                        });
+
+                        // Parse a GEXF encoded file to fill the graph
+                        // (requires "sigma.parseGexf.js" to be included)
+                        sigInst.parseGexf('{{ file.file.url }}');
+
+                        // EYE CANDY WE MIGHT WANT TO ADD:
+                        // highlight connected edges on mouseover
+                        // ref: http://sigmajs.org/examples/parse_data.html, MIT license
+
+                        // add atrribute display to mouseover
+                        // ref: http://sigmajs.org/examples/more_node_info.html, MIT license
+                        // NOTE: the wrong code is given in the listing at the above link.  look at source -_-
+                        (function(){
+                            var popUp;
+
+                            function attributesToString(obj) {
+                                var hasProp = false;
+                                var tooltip = '';
+                                for(var prop in obj){
+                                    // skip over 'suspicious' (this is apparent by the color coding):
+                                    if (prop == "suspicious") { continue; }
+
+                                    hasProp = true;
+                                    tooltip += '<li>' + prop + ': ' + obj[prop] + '</li>';
+                                }
+
+                                if (!hasProp) { return ""; }
+                                return '<ul>' + tooltip + '</ul>';
+                            }
+
+                            function showNodeInfo(event) {
+                                popUp && popUp.remove();
+
+                                var node;
+                                sigInst.iterNodes(function(n){
+                                    node = n;
+                                },[event.content[0]]);
+
+                                popUpAttrs = attributesToString( node['attributes'] );
+                                if (popUpAttrs == "") { return; }
+
+                                popUp = $(
+                                    '<div class="node-info-popup"></div>'
+                                ).append(
+                                    popUpAttrs
+                                ).attr(
+                                        'id',
+                                        'node-info'+sigInst.getID()
+                                ).css({
+                                            'display':      'inline-block',
+                                            'border-radius': 3,
+                                            'padding':       5,
+                                            'background':   '#fff',
+                                            'color':        '#000',
+                                            'box-shadow':   '0 0 4px #666',
+                                            'position':     'absolute',
+                                            'left':         node.displayX,
+                                            'top':          node.displayY+15
+                                        });
+
+                                $('ul',popUp).css('margin','0 0 0 20px');
+
+                                $('#opaf-graph').append(popUp);
+                            }
+
+                            function hideNodeInfo(event) {
+                                popUp && popUp.remove();
+                                popUp = false;
+                            }
+
+                            sigInst.bind('overnodes',showNodeInfo).bind('outnodes',hideNodeInfo).draw();
+                        })();
+
+                        // Yellow: "lonely" nodes
+                        // Red: "suspicious" nodes
+                        sigInst.iterNodes(function(n){
+                            if(n.degree == 0){
+                                n.size = 4;
+                                n.color = "#ff0";
+                                n['attributes']['Reason for Suspicion'] = "Object is not referenced";
+                            }
+                            if (n['attributes']['suspicious'] == "True"){
+                                n.size = 4;
+                                n.color = "#f00";
+                            }
+                        });
+
+                        // Draw the graph
+                        sigInst.draw();
+
+                        // allow user to start force atlas for faster load times ... not us
+                        //sigInst.startForceAtlas2();
+
+                        var isRunning = false;
+                        document.getElementById('stop-layout').addEventListener('click',function(){
+                            if(isRunning){
+                                isRunning = false;
+                                sigInst.stopForceAtlas2();
+                                document.getElementById('stop-layout').childNodes[0].nodeValue = 'Start Layout';
+                            }else{
+                                isRunning = true;
+                                sigInst.startForceAtlas2();
+                                document.getElementById('stop-layout').childNodes[0].nodeValue = 'Stop Layout';
+                            }
+                        },true);
+                            document.getElementById('rescale-graph').addEventListener('click',function(){
+                            sigInst.position(0,0,1).draw();
+                        },true);
+                    }
+
+					if (document.addEventListener) {
+						document.addEventListener("DOMContentLoaded", init, false);
+					} else {
+						window.onload = init;
+					}
+				</script>
+				<tr>
+					<th scope="row"><a href="{{ file.file.url }}.txt" target="_blank">GEXF (Graph) File</a></th>
+{#					{% for name, value in result.get_display_metadata.items %}#}
+{#						<td>{{ name|title }}: {{ value }}</td>#}
+{#					{% endfor %}#}
+				</tr>
+				<tr>
+					<div class="buttons-container">
+
+						<button class="btn" id="stop-layout">Start Layout</button>
+						<button class="btn" id="rescale-graph">Rescale Graph</button>
+					</div>
+					<div class="sigma-parent" id="sigma-example-parent">
+
+						<div class="sigma-expand" id="opaf-graph"></div>
+					</div>
+				</tr>
+
+			{% else %}
+				<tr>
+					<th scope="row"><a href="{{ file.file.url }}.xml" target="_blank">{{ file.filename }}</a></th>
+				</tr>
+			{% endif %}
+		{% endfor %}
+	{% endif %}
+
+</table>

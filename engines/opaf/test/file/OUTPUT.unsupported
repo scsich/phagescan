@@ -1,0 +1,4 @@
+$ python pdfid.py ../test/file/SAMPLE.unsupported
+PDFiD 0.0.12 ../test/file/SAMPLE.unsupported
+ Not a PDF document
+

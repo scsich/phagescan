@@ -1,0 +1,14 @@
+
+These salt states will install the libraries to enable the Peid
+tool to run on an Ubuntu Linux host.
+These instructions assume that your vm was built using vagrant with the
+salt-vagrant provisioner.
+
+
+You can implement these salt states by running the following command
+from within the vm:
+
+$ sudo salt-call state.sls peid
+
+There output should end with "local:" colored green.
+

@@ -1,0 +1,42 @@
+
+These salt states will install and configure the Eset engine and libraries on
+an Ubuntu Linux host. They will also update the A/V signatures to the latest version.
+These instructions assume that your vm was built using vagrant with the
+salt-vagrant provisioner.
+
+Before running these salt states, you need to do the following:
+
+1. Place install media into installation/install-media/eset/
+The Eset package: esets-4.0.8.amd64.deb
+
+2. Place license into installation/licenses/eset/
+Your Eset license file: nod32.lic
+
+The Eset package you have to download from the Eset website. The license file
+you should have received as an email attachment when you bought your Eset license.
+
+The files have to be named exactly as written in the pillar file pillar/settings.sls. 
+If you wish to use a different version, then you should update the associated 
+pillar variables in pillar/settings.sls.
+
+2. Update pillar/settings.sls with your Eset update_username and update_password.
+These values come from you Eset license documentation.
+
+Look for the following lines in that file and replace the USER and PASS values with
+your own:
+eset_update_username: USER
+eset_update_password: PASS
+
+
+Finally, you can implement these salt states by running the following command
+from within the vm:
+
+$ sudo salt-call state.sls eset
+
+If all of the output from each state is colored teal, then all states were
+successful. If any of the output from a state is colored red, then you have
+a problem to resolve.
+
+Note: The last salt state will update the A/V signatures. This will take
+several minutes, so be patient.
+

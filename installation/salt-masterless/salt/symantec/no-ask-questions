@@ -1,0 +1,12 @@
+AdminPort=0
+AdminPassword={{ pillar['symantec_admin_pwd_hash'] }}
+SSLPort=0
+InstallDir=/opt/SYMCScan
+User=avuser
+JavaCmd=/usr/java/default/bin/java
+JavaBinDir=/usr/java/default/bin
+JRELibDir=/usr/java/default/lib/i386
+Upgrade=NONE
+CanRelocate=1
+EnableFilteringAndDownloadDefinitions=false
+

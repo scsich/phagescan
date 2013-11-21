@@ -1,0 +1,54 @@
+TODO: THIS IS OUTDATED; WE DON'T RUN WITH 'brute' OPTION
+
+$ wine OfficeMalScanner.exe ../test/file/SAMPLE.good scan brute debug
+
++------------------------------------------+
+|           OfficeMalScanner v0.56         |
+|  Frank Boldewin / www.reconstructer.org  |
++------------------------------------------+
+
+[*] SCAN mode selected
+[*] Opening file ../test/file/SAMPLE.good
+[*] Filesize is 146944 (0x23e00) Bytes
+[*] Ms Office OLE2 Compound Format document detected
+[*] Format type Powerpoint
+[*] Scanning now...
+
+
+Brute-forcing for encrypted PE- and embedded OLE-files now...
+Bruting XOR Key: 0xff
+Bruting ADD Key: 0xff
+
+
+Analysis finished!
+
+---------------------------------------------------------------------
+             No malicious traces found in this file!
+Assure that this file is being scanned with the "info" parameter too.
+---------------------------------------------------------------------
+
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+
+$ wine OfficeMalScanner.exe ../test/file/SAMPLE.good info
+
++------------------------------------------+
+|           OfficeMalScanner v0.56         |
+|  Frank Boldewin / www.reconstructer.org  |
++------------------------------------------+
+
+[*] INFO mode selected
+[*] Opening file ../test/file/SAMPLE.good
+[*] Filesize is 146944 (0x23e00) Bytes
+[*] Ms Office OLE2 Compound Format document detected
+[*] Format type Powerpoint
+
+-------------------------
+[OLE Struct of: SAMPLE.good]
+-------------------------
+Pictures   [TYPE: Stream - OFFSET: 0x200 - LEN: 23490]
+CurrentUser   [TYPE: Stream - OFFSET: 0x18000 - LEN: 65]
+SummaryInformation   [TYPE: Stream - OFFSET: 0x18200 - LEN: 2436]
+PowerPointDocument   [TYPE: Stream - OFFSET: 0x5e00 - LEN: 104943]
+DocumentSummaryInformation   [TYPE: Stream - OFFSET: 0x18200 - LEN: 1044]
+-----------------------
+No VB-Macro code found!

@@ -1,0 +1,94 @@
+
+If you haven't completed [Project_root_dir]/installation/dev/INSTALL.vagrant-salt,
+complete that before continue with this document.
+
+These instructions require IntelliJ version 12.x or newer with the Python plugin installed.
+You can also use PyCharm 2.7.x or newer.
+
+These instructions will configure IntelliJ to use the Python SDK on your vagrant VM
+to execute tests and code.
+
+These steps require a running vagrant VM.
+
+
+0. Add a Remote Project SDK.
+  NOTE: You will have to re-do this for each new VM you create.
+
+a. Go to the Project Structure settings. 
+- from Quck Start window, Configure->Project Defaults->Project Structure
+- from an open project, File->Project Project Structure
+
+b. In the Project Structure settings, add a new Project SDK of type Python SDK
+
+c. In the Select Interpreter Path window, select "Remote..."
+
+d In the Configure Remote Python Interpreter window do the following:
+
+Enter these values:
+
+  Host=127.0.0.1
+  Port=2222
+  User name=vagrant (not anonymous login)
+  Auth type: Key pair (OpenSSH)
+  Private key file: ~/.vagrant.d/insecure_private_key
+  Passphrase: <leave it blank>
+  Python interpreter path: /opt/psvirtualenv/bin/python
+
+  Click the Test connection... button to verify it works.
+  Click OK
+
+  At this point, IntelliJ will scp all of the PyCharm helpers into the VM.
+  This is why you have to re-do this process for each new VM.
+
+Notes: 
+  You get the Port value from the output when you ran vagrant up <vmname>.
+  The line looks like this: "[vmname] -- 22 => 2222 (adapter 1)"
+
+  The "Fill from Vagrant config" button will only work if you are using a Vagrantfile
+  that defines a single VM. So our multi-vm Vagrantfile prevents this from working.
+
+e. In the Project Structure settings, enter a path for the Project compiler output.
+   Use something like: [Project_root_dir]/output
+
+f. Click Apply and then OK to close the Project Structure window.
+
+
+1. If you already have a project created for PhageScan, you can update the SDK used
+by your project to be the new Remote Python SDK. Skip step 2, but review steps 3+.
+
+2. If you do not have a project created for PhageScan, create one now.
+
+a. Create a new Project
+- from Quick Start window, Create New Project
+- from an open Project, File->New Project
+
+b. In the New Project window, select "Python Module" in the left frame.
+Enter phagescan as the Project Name. The Project location should be [Project_root_dir].
+Click Next.
+
+c. In the Specify Python Interpreter window, select the Remote Python interpreter.
+
+d. In the desired technologies window, check the box next to Django and enter these values:
+Project name: phagescan
+Application name: scaggr
+Templates folder: [Project_root_dir]/templates
+
+e.  Click Finish.
+
+
+3. Creating tests.
+
+You can create/run tests on the remote VM, but first you have to map [Project_root_dir]
+on your host to the /vagrant dir on the VM.
+
+a. From within your project, go to Run-> Edit Configurations.
+b. Select the sideways wrench icon. It should display the Defaults.
+c. Under defauls go to Python tests and select Nosetests.
+d. At the bottom of the nosetests window is a field named "Path mappings"
+e. Add an entry that maps your [Project_root_dir] on your development host to
+   /vagrant on the vm. It will be something like this:
+[Project_root_dir]=/vagrant
+f. Click Apply, then OK.
+g. Now you can create and run nosetests and they will contains this default mapping.
+
+

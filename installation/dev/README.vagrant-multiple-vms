@@ -1,0 +1,57 @@
+
+The following instructions will walk you through the steps to configure worker vms
+to communicate with phagedev (master). No changes are required to phagedev. All changes
+are applied the worker.
+
+Note: Steps 0-4 are done automatically if you are using the multi-vm Vagrantfile.
+
+0. Create vagrant worker VM.
+
+$ vagrant up <workername>
+
+
+1. Shutdown worker VM.
+
+$ vagrant halt <workername>
+
+
+2. Add a second network adapter to the VM.
+
+This assumes that you are using VirtualBox. If you are using another 
+Virtual Machine management tool, perform the same functionality.
+
+Edit the config for the new VM using the VirtualBox Manager.
+- Select the VM.
+- Select the Settings icon.
+
+Add and enable a second network adapter.
+- Select the Network settings
+- Select Adapter 2
+- Check the box to Enable Nework Adapter
+- Attached to: Host-only
+- Adapter Name: vboxnet0
+- Click OK to close and save your new settings.
+
+
+3. Start the worker VM.
+
+$ vagrant up <workername>
+
+
+4. Assign a static IP to the second interface.
+
+You will see one interface has a 10.x IP, leave that one alone.
+
+Manually configure the second interface with the following values:
+
+IP: 192.168.33.2x  (pick an x value so it is unique amongst your VMs)
+GW: 192.168.33.1
+
+
+5. Add a hosts entry for the scanmaster (phagedev vm)
+
+192.168.33.10  scanmaster
+
+
+6. Now your worker VM is ready to communicate with phagedev.
+

@@ -1,0 +1,6 @@
+{% if sample  %}
+    {% with sample.latest_scan as ls %}
+		{% include "sample/internal_infected_badge_list.html" %}
+    {% endwith %}
+{% endif %}
+

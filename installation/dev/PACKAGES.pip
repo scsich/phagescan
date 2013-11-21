@@ -1,0 +1,5 @@
+teamcity-messages # unknown
+teamcity-nose # unknown
+python-magic # unknown
+moto # for mocking of ec2 interface
+

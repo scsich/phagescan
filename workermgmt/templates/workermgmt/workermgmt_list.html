@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block content %}
+	<div class="container">
+		<div class="page-header"><h2>Worker Status</h2></div>
+		{% include "message.html" %}
+		{% if user.is_staff %}
+			<div id="all-worker-control">
+
+				<p><a href="{% url 'worker-all-maintain' %}" class="btn btn-primary"><i class="icon-refresh"></i> Run Maintain</a></p>
+				<p><a href="{% url 'worker-autoscale' %}" class="btn btn-primary"><i class="icon-refresh"></i> Run Autoscale Logic</a></p>
+				<p><a href="{% url 'worker-all-terminate' %}" class="btn btn-primary"><i class="icon-stop"></i> Terminate All</a></p>
+			</div>
+		{% endif %}
+		<br>
+		<table class="table table-striped">
+			<tr>
+				<th>Metric</th>
+				<th>Value</th>
+			</tr>
+			<tr>
+					<td>Workers Running</td>
+					<td>{{ workers_running }}</td>
+			</tr>
+			<tr>
+					<td>Pending Scans</td>
+					<td>{{ pending_scans }}</td>
+			</tr>
+		</table>
+
+		<table class="table table-striped">
+			<tr>
+				<th>Worker Name</th>
+
+				<th>IP</th>
+				<th>Launched At</th>
+				<th>State</th>
+
+			</tr>
+			{% for instance in object_list %}
+				<tr>
+					<td>{{ instance.private_dns_name }}</td>
+					<td>{{ instance.private_ip_address }}</td>
+					<td>{{ instance.launch_time }}</td>
+					<td>{{ instance.state }}</td>
+					<td></td>
+				</tr>
+			{% endfor %}
+		</table>
+	</div>
+{% endblock %}

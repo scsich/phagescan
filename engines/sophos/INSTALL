@@ -1,0 +1,86 @@
+
+0. This guide was developed against Sophos Anti-Virus for Unix version 4.84.0.
+
+The version we are using in production is: 
+Sophos Anti-Virus for UNIX (unmanaged) 4.84.0
+
+File name is: 
+linux.amd64.glibc.2.3.tar.Z
+
+----
+
+1. Install necessary OS packages.
+
+If running Ubuntu:
+$ sudo apt-get install $(< [this_directory]/PACKAGES.ubuntu)
+
+If running CentOS:
+TODO
+
+----
+
+2. Acquire a copy of Sophos Anti-Virus for Unix.  
+
+It is available here:
+http://www.sophos.com/en-us/products/endpoint/endpoint-protection/components/anti-virus-protection/unix.aspx
+
+The trial version for linux will work for basic testing:
+http://www.sophos.com/en-us/products/free-trials/shared-download-components/anti-virus-for-linux.aspx
+
+Select one of the 4.x versions that fits your distro.
+
+----
+
+3. Extract the archive.
+
+----
+
+4. Install Sophos Anti-Virus for Unix.
+
+$ sudo ./install.sh
+
+----
+
+5. Update definitions.
+
+Go to http://www.sophos.com/downloads/ide/
+
+Download the compressed IDEs file for your version of Sophos Anti-Virus.
+484 is Engine version 4.84.  
+
+$ cd /tmp
+$ wget http://downloads.sophos.com/downloads/ide/[version]_ides.zip
+
+Extract the IDEs to the directory /usr/local/sav.
+$ cd /usr/local/sav
+$ sudo unzip /tmp/[version]_ides.zip
+
+NOTE: Sophos releases a new version of their scan engine every month.
+The installer contains the IDE files available at the time that the
+scan engine was built.
+
+The website hosts the latest IDEs for the last 3 months of scan engines.
+Before installing the IDE files for a new version, you have to delete
+the IDE files for the previous version.
+
+----
+
+7. (Optional)  Verify installation.
+
+You scan files with the following command:
+$ sweep -ss [file]
+
+This ss option tells SAV to only output if a virus is found.
+
+6a. Run against the EICAR test file:
+$ cp [Project_root_dir]/generic/test/file/eicar.com.txt /tmp/eicar
+$ sweep -ss /tmp/eicar
+
+You should see a notification that the file is "infected".
+
+6b. Run against the blat.ex_ test file:
+$ cp [Project_root_dir]/generic/test/file/blat.ex_ /tmp/blat.ex_
+$ sweep -ss /tmp/blat.ex_
+
+You should not see a notification that the file is infected.
+

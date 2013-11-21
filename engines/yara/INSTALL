@@ -1,0 +1,11 @@
+
+1. Install necessary Python packages.
+
+$ pip install -r [this_directory]/PACKAGES.pip
+
+----
+
+2. (Optional) Add yara rule files to rule directory.
+
+Clone the repository of yara rules to:
+[Project_root_dir]/engines/yara/rules/

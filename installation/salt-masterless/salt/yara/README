@@ -1,0 +1,18 @@
+
+These salt states will install the libraries to enable the Yara
+tool to run on an Ubuntu Linux host. 
+These instructions assume that your vm was built using vagrant with the
+salt-vagrant provisioner.
+
+
+You can implement these salt states by running the following command
+from within the vm:
+
+$ sudo salt-call state.sls yara
+
+If all of the output from each state is colored teal, then all states were
+successful. If any of the output from a state is colored red, then you have
+a problem to resolve.
+
+You will need to manage the placement of your yara rules into the engines/yara/rules/
+directory in the project.

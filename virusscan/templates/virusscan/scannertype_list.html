@@ -1,0 +1,114 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+<div class="page-header"><h2>Frontend Health</h2></div>
+	<table class="table table-striped">
+	<tr>
+		<th>Task Name</th>
+		<th>Worker Status</th>
+	</tr>
+	{% for master_task in master_tasks %}
+		<tr>
+		<td>{{ master_task.task_obj.queue }}</td>
+		<td>
+		{% with workers=master_task.get_all_task_workers %}
+
+				{% if workers|length == 0 %}
+					<span class="badge badge-important">Offline</span>
+				{% else %}
+					<span class="badge badge-success">Alive: {{ workers|length }}</span>
+				{% endif %}
+		{% endwith %}
+		</td>
+		</tr>
+	{% endfor %}
+	</table>
+</div>
+<div class="container">
+
+<div class="page-header"><h2>Backend Health</h2></div>
+{% include "message.html" %}
+<table class="table table-striped">
+	<tr>
+		<th>Scanner</th>
+		<th>Platform</th>
+		<th>Worker Status on EC2</th>
+		<th>Worker Status On Queue(click to expand)</th>
+	</tr>
+	{% for worker in worker_images %}
+		{% with image_exists=worker.worker_image_exists_in_ec2 ec2_images=worker.get_running_instances ec2_images_pending=worker.get_pending_instances %}
+		<div class="modal hide fade" id="ec2-stats-{{ worker.pk }}">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+					<h3>{{ worker }} Worker Status</h3>
+				</div>
+				<div class="modal-body">
+					{% for instance in worker.get_all_pending_running_instances %}
+						<li>{{ instance.id }} - {{ instance.status }} ({{ instance.private_ip_address }}) - started at {{ instance.launch_time }}</li>
+					{% endfor %}
+				</div>
+				<div class="modal-footer">
+				</div>
+		</div>
+		{% for scanner_type in worker.scannertype_set.all %}
+			{% with  workers=scanner_type.get_all_task_workers  %}
+				<div class="modal hide fade" id="worker-stats-{{ scanner_type.pk }}">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+						<h3>{{ scanner_type.name }} Celery Worker Status</h3>
+					</div>
+					<div class="modal-body">
+						<ul>
+							{% for worker_name in workers %}
+								<li>{{ worker_name }}</li>
+							{% endfor %}
+						</ul>
+					</div>
+					<div class="modal-footer">
+					</div>
+				</div>
+			<tr>
+				<td>{{ scanner_type.name }}</td>
+
+				<td>{{ scanner_type.platform }}</td>
+				<td>
+				{% if ec2_images|length == 0 and image_exists %}
+					<span class="badge badge-important">Offline</span>
+					<a href="{% url 'worker-start-single' pk=scanner_type.worker_image.pk %}">
+						<i class="icon-small icon-arrow-up" rel="tooltip" title="Launch EC2 Image ({{ worker.image_label }})" id="worker-start-{{ scanner_type.pk }}"></i>
+					</a>
+				{% elif not image_exists%}
+					<span class="badge badge-important">No Image</span>
+				{% else %}
+					<span class="badge badge-success white">
+						<a href="#" id="badge-ec2-image-{{ scanner_type.pk }}">Alive: {{ ec2_images|length }}</a></span>
+					<a href="{% url 'worker-terminate-single' pk=worker.pk %}">
+						<i class="icon-small icon-remove-circle" rel="tooltip" title="Terminate EC2 Image ({{ worker.image_label }})" id="worker-terminate-{{ scanner_type.pk }}"></i>
+					</a>
+				{% endif %}
+				</td>
+				<td>
+				{% if workers|length == 0 %}
+					<span class="badge badge-important">Offline</span>
+				{% else %}
+					<span class="badge badge-success white"><a href="#" id="badge-{{ scanner_type.pk }}">Alive: {{ workers|length }}</a></span>
+				{% endif %}
+				</td>
+			</tr>
+			{% endwith %}
+            {# attach an on click to the badge above that gives us an error popup #}
+	        <script type="text/javascript">
+	            $('#badge-{{ scanner_type.pk }}').on('click', function() {
+	                $('#worker-stats-{{ scanner_type.pk }}').modal('show');
+	            });
+	            $('#badge-ec2-image-{{ scanner_type.pk }}').on('click', function() {
+	                $('#ec2-stats-{{ worker.pk }}').modal('show');
+	            });
+	        </script>
+		{% endfor %}
+	{% endwith %}
+	{% endfor %}
+</table>
+</div>
+
+{% endblock %}

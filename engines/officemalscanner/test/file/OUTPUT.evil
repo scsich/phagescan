@@ -1,0 +1,88 @@
+$ wine omsadapter/file/OfficeMalScanner.exe omsadapter/test/file/SAMPLE.evil scan debug
+
++------------------------------------------+
+|           OfficeMalScanner v0.56         |
+|  Frank Boldewin / www.reconstructer.org  |
++------------------------------------------+
+
+[*] SCAN mode selected
+[*] Opening file omsadapter/test/file/SAMPLE.evil
+[*] Filesize is 68608 (0x10c00) Bytes
+[*] Ms Office OLE2 Compound Format document detected
+[*] Format type Excel
+[*] Scanning now...
+
+FS:[30] (Method 4) signature found at offset: 0x9da9
+
+648B5230                           mov edx, fs:[edx+30h]
+8B520C                             mov edx, [edx+0Ch]
+8B5214                             mov edx, [edx+14h]
+8B7228                             mov esi, [edx+28h]
+0FB74A26                           movzx ecx, word ptr [edx+26h]
+31FF                               xor edi, edi
+31C0                               xor eax, eax
+AC                                 lodsb
+3C61                               cmp al, 61h
+7C02                               jl $+04h
+2C20                               sub al, 20h
+C1CF0D                             ror edi, 0Dh
+01C7                               add edi, eax
+E2F0                               loop $-0Eh
+52                                 push edx
+57                                 push edi
+--------------------------------------------------------------------------
+
+
+
+
+Analysis finished!
+
+--------------------------------------------------------
+SAMPLE.evil seems to be malicious! Malicious Index = 10
+--------------------------------------------------------
+
+
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+
+
+$ wine omsadapter/file/OfficeMalScanner.exe omsadapter/test/file/SAMPLE.evil info
+
++------------------------------------------+
+|           OfficeMalScanner v0.56         |
+|  Frank Boldewin / www.reconstructer.org  |
++------------------------------------------+
+
+[*] INFO mode selected
+[*] Opening file omsadapter/test/file/SAMPLE.evil
+[*] Filesize is 68608 (0x10c00) Bytes
+[*] Ms Office OLE2 Compound Format document detected
+[*] Format type Excel
+
+----------------------------
+[OLE Struct of: SAMPLE.EVIL]
+----------------------------
+CompObj   [TYPE: Stream - OFFSET: 0x10b80 - LEN: 114]
+Workbook   [TYPE: Stream - OFFSET: 0x600 - LEN: 44301]
+_VBA_PROJECT_CUR   [TYPE: Storage]
+ VBA   [TYPE: Storage]
+  dir   [TYPE: Stream - OFFSET: 0xed80 - LEN: 843]
+  Sheet1   [TYPE: Stream - OFFSET: 0xbc40 - LEN: 3203]
+  __SRP_0   [TYPE: Stream - OFFSET: 0xf300 - LEN: 1872]
+  __SRP_1   [TYPE: Stream - OFFSET: 0xc900 - LEN: 240]
+  __SRP_2   [TYPE: Stream - OFFSET: 0xc900 - LEN: 720]
+  __SRP_3   [TYPE: Stream - OFFSET: 0xc900 - LEN: 120]
+  __SRP_4   [TYPE: Stream - OFFSET: 0xc900 - LEN: 136]
+  __SRP_5   [TYPE: Stream - OFFSET: 0xc900 - LEN: 147]
+  ThisWorkbook   [TYPE: Stream - OFFSET: 0xb800 - LEN: 1045]
+  _VBA_PROJECT   [TYPE: Stream - OFFSET: 0xdf80 - LEN: 3562]
+  modShowFilePics   [TYPE: Stream - OFFSET: 0xcc80 - LEN: 3441]
+ PROJECT   [TYPE: Stream - OFFSET: 0xfe00 - LEN: 569]
+ PROJECTwm   [TYPE: Stream - OFFSET: 0x6bb - LEN: 110]
+SummaryInformation   [TYPE: Stream - OFFSET: 0x10440 - LEN: 220]
+DocumentSummaryInformation   [TYPE: Stream - OFFSET: 0x10440 - LEN: 1552]
+-----------------------------------------------------------------------------
+                VB-MACRO CODE WAS FOUND INSIDE THIS FILE!
+               The decompressed Macro code was stored here:
+
+------> Z:\home\vmuser\Desktop\phage\SAMPLE.EVIL-Macros
+-----------------------------------------------------------------------------

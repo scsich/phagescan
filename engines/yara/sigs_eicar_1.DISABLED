@@ -1,0 +1,14 @@
+rule eicar_1 : test
+{
+    meta:                                        
+        description = "Example yara rule #1 for eicar"
+        threat_level = 3
+        in_the_wild = true
+
+    strings: 
+        $a = "[4\\PZX54(P^)7CC)"
+
+    condition:
+        $a
+}
+

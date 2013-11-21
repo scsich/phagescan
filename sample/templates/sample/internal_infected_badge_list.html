@@ -1,0 +1,14 @@
+{% with numClean=ls.get_number_clean numInfected=ls.get_number_infections numEvilScanners=ls.get_number_evilness_scanners numEvilFails=ls.get_number_evilness_failures bestInfectionRes=ls.get_most_informational_scan_result %}
+    {% if sample.pending_scans %}
+        <span class="badge badge-warning">Scan In Progress</span>
+    {% elif ls %}
+        {% if numInfected > 0 %}
+            <span class="badge badge-important"> {{ numInfected }} / {{ numEvilScanners }} {% if bestInfectionRes %}{{ bestInfectionRes.infected_string|truncatechars:12 }}{% endif %}</span>
+        {% elif numClean > 0  %}
+            <span class="badge badge-success"> Clean </span>
+        {% else %}
+            <span class="badge badge-inverse">Scan Queued</span>
+        {% endif %}
+    {% endif %}
+    {% if numEvilFails %}<br><p><small>*{{ numEvilFails }} errors reported.</small></p>{% endif %}
+{% endwith %}

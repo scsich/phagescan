@@ -1,0 +1,53 @@
+
+1. Install necessary OS packages.
+
+If running Ubuntu:
+$ sudo apt-get install $(< [this_directory]/PACKAGES.ubuntu)
+
+If running CentOS:
+TODO
+
+----
+
+2. Update definitions.
+
+$ sudo freshclam
+
+----
+
+3. Start ClamAV daemon.
+
+If running Ubuntu:
+$ sudo /etc/init.d/clamav-daemon start
+
+If running CentOS:
+TODO
+
+
+----
+
+(Optional)
+
+4a. Verify correct installation by scanning sample files.
+
+The scanner is located at: /usr/bin/clamscan
+
+$ clamscan [Project_root_dir]/engines/generic/test/file/
+
+4b. Successful output should look like the following:
+
+<path>/file/evil.pdf: Heuristics.PDF.ObfuscatedNameObject FOUND
+<path>/file//eicar.com.txt: Eicar-Test-Signature FOUND
+<path>/file//blat.ex_: OK
+
+----------- SCAN SUMMARY -----------
+Known viruses: 2545241
+Engine version: 0.97.8
+Scanned directories: 1
+Scanned files: 5
+Infected files: 2
+Data scanned: 0.39 MB
+Data read: 0.30 MB (ratio 1.31:1)
+Time: 5.792 sec (0 m 5 s)
+
+

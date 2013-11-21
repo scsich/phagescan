@@ -1,0 +1,73 @@
+
+This guide was developed against Panda Antivirus Command Line
+Scanner 9.5.1.2 on Windows XP SP3.
+
+0. Get username and password
+
+The Command Line Scanner (pavcl) is free to use. However to download
+updated signatures, you need a username and password for the Panda
+manual update server. To get that, you have to purchase a license
+for ANY Panda A/V product (excluding Cloud versions) and then request
+credentials for the manual update server.
+
+We purchased Panda AntVirus Pro 2014.
+
+Once you've purchase a license, contact Panda A/V tech support to request
+a username and password for their virus signature updates site:
+http://acs.pandasoftware.com/updates/pavsig/pav.phtml
+
+If you have trouble using your username and password, contact Panda
+tech support. They are very prompt and will get it working.
+
+----
+
+1. Install Command Line Scanner
+
+Download from here:
+http://research.pandasecurity.com/security/pavcl/
+Direct link:
+http://research.pandasecurity.com/blogs/images/pavcl.zip
+
+Extract zip contents to: C:\pavcl
+
+----
+
+2. Test scanner
+
+Run this command in a Windows cmd prompt:
+
+c:\pavcl\pavcl.exe -aex -nob -nos -nor <file>
+
+* where <file> is the file you want to scan
+
+The files in [Project_root_dir]\engines\generic\test\file\
+are good sample files for testing.
+
+----
+
+3. Update signatures
+
+Download .zip file from here:
+
+http://acs.pandasoftware.com/member/pavsig/pav.zip
+
+You will need your username/password obtained in step 0.
+
+Extract pav.sig from pav.zip into c:\pavcl\pav.sig
+
+Note: Download of the pav.zip is only available over http. We
+requested a SSL method for download, but one does not currently
+exist.
+
+----
+
+4. Add username and password to panda.conf
+
+Update panda.conf with your username and password from step 0.
+
+----
+
+5. Create script and task to install periodic A/V signature updates (optional)
+
+You can create a script that will download and install updated signatures.
+You can then create a Windows tasks that periodically runs that script.

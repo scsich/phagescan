@@ -1,0 +1,84 @@
+<!--suppress HtmlDeprecatedTag -->
+<h3>PEiD</h3>
+{% if result.metadata.address_of_entry_point %}
+<div class="tabbable">
+
+    <ul class="nav nav-tabs" id="myTab">
+        <li  class="active"><a href="#packer" data-toggle="tab"><h4>Packer</h4></a></li>
+        <li> <a href="#info" data-toggle="tab"><h4>Info</h4></a></li>
+        <li> <a href="#sections" data-toggle="tab"><h4>Sections</h4></a></li>
+        <li> <a href="#imports" data-toggle="tab"><h4>Imports</h4></a></li>
+    </ul>
+
+    <div class="tab-content">
+        <div class="tab-pane active" id="packer">
+            <ul class="unstyled">
+                {% for pesm in result.get_peid_metadata.peid_signature_match %}
+                    <div class="border" style="margin-bottom:10px;"></div>
+                    <li><span class="badge badge-important">
+                        {{ pesm }}
+                    </span></li>
+                {% endfor %}
+            </ul>
+        </div>
+        <div class="tab-pane" id="info">
+            <table class="table table-striped">
+                <tr>
+                    <td><strong>Address Of Entry Point:</strong></td>
+                    <td>{{ result.metadata.address_of_entry_point }}</td>
+                </tr>
+                <tr>
+                    <td><strong>Required CPU Type:</strong></td>
+                    <td>{{ result.metadata.required_cpu_type }}</td>
+                </tr>
+                <tr>
+                    <td><strong>Is a DLL:</strong></td>
+                    <td>{{ result.metadata.dll }}</td>
+                </tr>
+                <tr>
+                    <td><strong>Subsystem:</strong></td>
+                    <td>{{ result.metadata.subsystem }}</td>
+                </tr>
+                <tr>
+                    <td><strong>Compile Time:</strong></td>
+                    <td>{{ result.metadata.compile_time }}</td>
+                </tr>
+                <tr>
+                    <td><strong>Number of RVA and Sizes:</strong></td>
+                    <td>{{ result.metadata.number_of_rva_and_sizes }}</td>
+                </tr>
+            </table>
+        </div>
+        <div class="tab-pane" id="sections">
+            <table class="table table-striped">
+                <thead>
+                    <th>Name</th><th>Virtual Address</th><th>Virtual Size</th><th>Size Of Raw Data</th><th>Entropy</th>
+                </thead>
+                <tbody>
+                {% for name, virtualAddress, virtualSize, sizeofRawData, entropy in result.get_peid_metadata.section_details %}
+                   <tr><td>{{ name }}</td><td>{{ virtualAddress }}</td><td>{{ virtualSize }}</td><td>{{ sizeofRawData }}</td><td>{{ entropy }}</td>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="tab-pane" id="imports">
+            <table class="table table-striped">
+                {% for dll, imports_and_colors in result.get_peid_metadata.imported_dlls.items %}
+                   <tr><td><strong>{{ dll }}</strong></td>
+                       <td>
+                   {% for import_name, import_color in imports_and_colors %}
+                      <font color="{{ import_color }}">{{ import_name }}</font>
+                   {% endfor %}</td></tr>
+                {% endfor %}
+              </table>
+        </div>
+    </div>
+</div>
+{% else %}
+	<table class="table table-striped">
+    <tr>
+        <th scope="row">N/A to this sample</th>
+    </tr>
+	</table>
+{% endif %}
+

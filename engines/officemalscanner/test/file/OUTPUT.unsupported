@@ -1,0 +1,27 @@
+$ wine OfficeMalScanner.exe ../test/file/OUTPUT.evil scan debug
+
++------------------------------------------+
+|           OfficeMalScanner v0.56         |
+|  Frank Boldewin / www.reconstructer.org  |
++------------------------------------------+
+
+[*] SCAN mode selected
+[*] Opening file ../test/file/OUTPUT.evil
+[*] Filesize is 3620 (0xe24) Bytes
+
+Sorry, this file is not a Ms Office OLE2 Compound File (PPT/DOC/XLS)
+
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+
+$ wine OfficeMalScanner.exe ../test/file/OUTPUT.evil info
+
++------------------------------------------+
+|           OfficeMalScanner v0.56         |
+|  Frank Boldewin / www.reconstructer.org  |
++------------------------------------------+
+
+[*] INFO mode selected
+[*] Opening file ../test/file/OUTPUT.evil
+[*] Filesize is 3620 (0xe24) Bytes
+
+Sorry, this file is not a Ms Office OLE2 Compound File (PPT/DOC/XLS)

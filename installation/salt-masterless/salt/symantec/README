@@ -1,0 +1,40 @@
+
+These salt states will install and configure the Symantec engine and libraries on
+a CentOS 6 Linux host. They will also update the A/V signatures to the latest version.
+These instructions assume that your vm was built using vagrant with the
+salt-vagrant provisioner.
+
+
+Before running these salt states, you need to do the following:
+
+1. Place install media into installation/install-media/symantec/
+
+ The Symantec engine package: Symantec_Protection_Engine_NAS_7.0.1.1_Linux_IN.zip
+ The Java JRE package: jre-7u10-linux-i586.rpm
+
+2. Place license into installation/licenses/symantec/
+
+ Your Symantec license file: spe.slf
+
+ The Symantec engine package you have to download from the Symantec website. The license file
+ you should have received as an email attachment when you bought your Symantec license.
+ The java JRE, you can download from Sun.com (URL in engine/symantec/INSTALL.symantec-7.0)
+
+ The files have to be named exactly as written in the pillar file pillar/settings.sls. 
+ If you wish to use a different version, then you should update the associated 
+ pillar variables in pillar/settings.sls.
+
+Update the symantec admin password hash in pillar/settings.sls. See INSTALL.symantec-7.0
+for guidance.
+
+Update the username in the no_ask_questions.txt file, if you want a user other than vagrant.
+
+Finally, you can implement these salt states by running the following command
+from within the vm:
+
+$ sudo salt-call state.sls symantec
+
+If all of the output from each state is colored teal, then all states were
+successful. If any of the output from a state is colored red, then you have
+a problem to resolve.
+

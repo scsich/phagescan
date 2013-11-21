@@ -1,0 +1,30 @@
+
+These salt states will install the libraries to enable the Office Malware Scan 
+tool to run on an Ubuntu Linux host. 
+These instructions assume that your vm was built using vagrant with the
+salt-vagrant provisioner.
+
+Before running these salt states, you need to do the following:
+
+Add 1 file into this directory (salt/oms/):
+
+The OfficeMalScanner package: OfficeMalScanner.zip
+
+You can download the OfficeMalScanner package as described in the oms INSTALL
+instructions.
+
+
+You can implement these salt states by running the following command
+from within the vm:
+
+$ sudo salt-call state.sls oms
+
+If all of the output from each state is colored teal, then all states were
+successful. If any of the output from a state is colored red, then you have
+a problem to resolve.
+
+Note: This will take a long time to install. Wine is a finicky program to
+install on an older OS. So, first we have to install all of the updated
+system packages. Then we can install Wine. There are over 100 packages
+that wine depends on, all of which have to be installed with wine.
+

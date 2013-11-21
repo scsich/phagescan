@@ -1,0 +1,9 @@
+<h3>PDFiD</h3>
+<table class="table table-striped">
+    {% if result.metadata.pdfid_rawresult and result.metadata.pdfid_rawresult %}
+        <tr><th scope="row">python pdfid.py &lt;sample&gt;</th></tr>
+        <tr><td><pre>{{ result.metadata.pdfid_rawresult }}</pre></td></tr>
+    {% else %}
+        <tr><th scope="row">N/A to this sample</th></tr>
+    {% endif %}
+</table>

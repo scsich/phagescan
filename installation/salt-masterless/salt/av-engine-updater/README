@@ -1,0 +1,24 @@
+
+These salt states will install the av_sig_update.sh script into /root on
+a Linux host. They will NOT execute the script to update the A/V
+signatures. You should run it manually.
+These instructions assume that your vm was built using vagrant with the
+salt-vagrant provisioner.
+
+
+Most of the A/V engines are straight forward with respect to upgrading signatures.
+However, updating the Sophos engine requires some manual attention. Sophos releases a 
+new version of their engine regularly. For this script, you need to ensure 
+that the SOPHOS_IDES_FILE variable contains the correct update filename; 
+the one that goes with the installed engine version.
+
+So, if the installed engine is 4.87, then you'll use the update file 
+named 487_ides.zip.
+
+Note: The sophos.init states will set the ides file to the version defined in pillar.
+
+Finally, you can implement these salt states by running the following command
+from within the vm:
+
+$ sudo salt-call state.sls av-engine-updater
+

@@ -1,0 +1,20 @@
+[
+  {
+    "pk": 1, 
+    "model": "auth.user", 
+    "fields": {
+      "username": "devuser", 
+      "first_name": "", 
+      "last_name": "", 
+      "is_active": true, 
+      "is_superuser": true, 
+      "is_staff": true, 
+      "last_login": "2012-12-12T03:21:13.617Z", 
+      "groups": [], 
+      "user_permissions": [], 
+      "password": "pbkdf2_sha256$10000$0LDG7jzCoknO$vhFOqSvgvA+g4XpHtTqUaahdxxPmDIl31eDX0BnhtMc=", 
+      "email": "dflkdjf@sdlfd.local", 
+      "date_joined": "2012-12-12T03:19:45.941Z"
+    }
+  }
+]

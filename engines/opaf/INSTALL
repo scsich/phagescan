@@ -1,0 +1,14 @@
+
+1. Install necessary OS packages.
+
+If running Ubuntu:
+$ sudo apt-get install $(< [this_directory]/PACKAGES.ubuntu)
+
+If running CentOS:
+TODO
+
+----
+
+2. Install necessary Python packages.
+
+$ pip install $(< [this_directory]/PACKAGES.pip)

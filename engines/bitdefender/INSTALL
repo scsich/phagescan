@@ -1,0 +1,94 @@
+
+0. The following instructions were tested on / assume:
+- Ubuntu 12.04 AMD64
+- BitDefender for UNICES 7.6.4
+- this file is in the current working directory
+
+----
+
+1. Acquire Bitdefender Antivirus Scanner for Unices
+
+An evaluation version is available here:
+http://www.bitdefender.com/site/Downloads/browseEvaluationVersion/2
+
+The licensed version is available here:
+http://download.bitdefender.com/SMB/Workstation_Security_and_Management/BitDefender_Antivirus_Scanner_for_Unices/Unix/Current/EN_FR_BR_RO/Linux/
+
+We only care about the "nogui" installation option.
+
+Debian, Redhat and other packages are offered.
+
+----
+
+2. Install requisite packages
+
+$ sudo apt-get install $(< ./PACKAGES.ubuntu)
+
+----
+
+DECISION:
+As these instructions assume an Ubuntu environment, you should have downloaded a .deb.run file.
+This file is simply a license-acceptance wrapper around a .deb file.  If you accept the license,
+it would be easier to simply retain the packaged .deb, as the installation of the .deb can be
+easily scripted.  If you would like to extract the .deb for easier subsequent installation, use
+step B3, else continue to step A3 for .deb.run interactive instructions.
+
+----
+
+A3. Verify package integrity (optional) & Install BitDefender
+
+$ sh BitDefender-Antivirus-Scanner-nogui-7.6-4.linux-gcc3x.i586.deb.run --check
+$ sudo sh BitDefender-Antivirus-Scanner-nogui-7.6-4.linux-gcc3x.i586.deb.run
+
+Continue at step 4.
+
+----
+
+B3. Extract the packaged .deb and install BitDefender
+
+$ sh BitDefender-Antivirus-Scanner-nogui-7.6-4.linux-gcc3x.i586.deb.run --keep
+
+After license acceptance, the script should generate a folder in the current working directory
+with its extracted contents, including the .deb.  You may not install / script installation of
+the .deb in the normal fashion.
+
+$ sudo dpkg -i <extracted_location>/bitdefender-scanner_7.6-4_i386.deb
+
+Continue at step 4.
+
+----
+
+4. Update BitDefender
+
+$ sudo bdscan --update
+
+----
+
+5. Test BitDefender installation
+
+5a. Test scan EICAR (should work even if BitDefender update was unsuccessful):
+$ /usr/bin/bdscan [Project_root_dir]/engines/generic/test/file/eicar.com.txt
+
+BitDefender's output should include:
+eicar.com.txt  infected: EICAR-Test-File (not a virus)
+
+5b. Test scan a benign file:
+$ /usr/bin/bdscan [Project_root_dir]/engines/generic/test/file/blat.ex_
+
+BitDefender's output should include:
+blat.ex_  ok
+
+5c. Test scan a malicious file (this tests whether the initial BitDefender update was successful):
+$ /usr/bin/bdscan [Project_root_dir]/engines/generic/test/file/evil.pdf
+
+If BitDefender's initial update was successful, the scan output should include:
+evil.pdf  ok
+evil.pdf=>(JAVASCRIPT)  ok
+evil.pdf=>(NAME)  infected: Exploit.PDF-Name.Gen
+evil.pdf=>(CODE 1)  infected: Backdoor.Shell.AC
+
+
+
+
+
+

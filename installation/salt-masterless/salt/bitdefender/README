@@ -1,0 +1,41 @@
+
+These salt states will install and configure the Bitdefender engine and libraries on
+an Ubuntu Linux host. They will also update the A/V signatures to the latest version.
+These instructions assume that your vm was built using vagrant with the
+salt-vagrant provisioner.
+
+
+Before running these salt states, you need to do the following:
+
+----
+
+1. Place install media into installation/install-media/bitdefender/
+The BitDefender engine: bitdefender-scanner_7.6-4_i386.deb
+
+This engine .deb can be attained by running the .deb.run downloaded from
+BitDefender's website with the --keep flag.
+
+This file must be named exactly as written in the pillar file pillar/settings.sls.
+If you wish to use a different version, then you should update the associated
+pillar variables in pillar/settings.sls.
+
+----
+
+2. Update pillar/settings.sls with your BitDefender license key.
+
+Look for the following line in that file:
+bitdefender_license: LICENSE
+
+And replace "LICENSE" with your license key.
+
+----
+
+Finally, you can implement these salt states by running the following command
+from within the vm:
+
+$ sudo salt-call state.sls bitdefender
+
+If all of the output from each state is colored teal, then all states were
+successful. If any of the output from a state is colored red, then you have
+a problem to resolve.
+

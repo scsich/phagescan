@@ -1,0 +1,75 @@
+
+This is the root INSTALL file. 
+ If you are performing a manual build/install for either development or 
+production, follow the instructions listed here first and continue onto 
+the appropriate INSTALL.* file as directed at the bottom.
+
+ If you are manually building a Windows scanworker, skip the remainder of
+this file and go directly to:
+[Project_root_dir]/installation/scanworker/INSTALL.WindowsXP
+
+ If you are using vagrant and salt to automatically build/install/configure
+your develompment VMs, skip the remainder of this file and go directly to:
+[Project_root_dir]/installation/dev/INSTALL.vagrant-salt
+
+
+Ubuntu instructions were tested on 12.04 x86_64, Desktop edition.
+CentOS instructions were tested on 6.3 x86_64 and 6.4 x86_64.
+Windows instructions were tested on Windows XP SP3.
+
+----
+
+0. Clone the git repo to your development host
+
+$ git config --global user.name "yourUserName"
+$ git config --global user.email you@domain.com
+$ git clone git@github.com:bsi/phagescan.git
+ 
+Select your git branch:
+
+$ cd phagescan
+$ git branch --all
+$ git checkout -b <mybranch> origin/<mybranch>
+
+The phagescan directory created by git will be referred to as
+[Project_root_dir] throughout the documentation.
+
+----
+
+1. Install necessary OS packages.
+
+If running Ubuntu:
+$ sudo apt-get install $(< [Project_root_dir]/PACKAGES.ubuntu)
+
+If running CentOS:
+
+We only used CentOS as a scanworker. So, skip the rest of this document
+and refer to the CentOS scanworker INSTALL instructions:
+[Project_root_dir]/installation/scanworker/INSTALL.CentOS
+
+----
+
+2. Build & activate a virtual environment
+$ virtualenv ~/psvirtualenv
+$ source ~/psvirtualenv/bin/activate
+
+Your prompt should look like this after:
+(psvirtualenv)[user@host]$
+
+If you need to deactivate the virtual env:
+(don't do this now) $ deactivate
+
+----
+
+3. Continue on to the next INSTALL file as appropriate for the build you are 
+creating.
+
+If creating a development environment (scanmaster, scanworker, web server, 
+IDE all on the same node):
+[Project_root_dir]/installation/dev/INSTALL
+
+If creating a production scanmaster node:
+[Project_root_dir]/installation/scanmaster/INSTALL
+
+If creating a production scanworker node:
+[Project_root_dir]/installation/scanworker/INSTALL

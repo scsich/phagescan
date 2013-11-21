@@ -1,0 +1,33 @@
+
+In order to run tests, the following contains important pre-requisites.
+
+0. Cliffs notes to nosetests on the cmd line:
+
+a. Run them all from the project root in an activated virtual environment.
+b. Use the -sv options so you can see the test status.
+c. Run the command with the path to the test method, test class, or test file.
+d. Samples:
+
+# Test Class
+$ nosetests -sv sample.tests:AutoFileHashTest
+
+# Test File
+$ nosetests -sv engines.clamav.test.testscan
+
+# to test an individual test:
+$ nosetests -sv engines.avast.test.testscan:TestAvastAV.test_update
+
+
+1. For Django tests (i.e. sample/tests.py):
+
+a. When running nose tests on Django code, set the Environment Variable before running the test:
+
+$ export DJANGO_SETTINGS_MODULE=scaggr.settings
+
+b. Ensure the database is created and populated with Django tables. (See INSTALL)
+
+
+2. For A/V engine tests
+
+a. Clamav test expects clamd to be running on the same host. (See INSTALL)
+

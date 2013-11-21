@@ -1,0 +1,4 @@
+
+1. Install necessary Python packages.
+
+$ pip install $(< [this_directory]/PACKAGES.pip)

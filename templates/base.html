@@ -1,0 +1,74 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en">
+<head>
+	<title>PhageScan</title>
+	<meta charset="utf-8">
+
+	<meta name="description" content="">
+	<meta name="viewport" content="width=device-width">
+    <!-- Bootstrap CSS Toolkit styles -->
+    <link rel="stylesheet" href="{{ STATIC_URL }}css/bootstrap.min.css">
+
+    <!-- Generic page styles -->
+    <link rel="stylesheet" href="{{ STATIC_URL }}css/style.css">
+    <!-- Bootstrap styles for responsive website layout, supporting different screen sizes -->
+    <link rel="stylesheet" href="{{ STATIC_URL }}css/bootstrap-responsive.min.css">
+    <!-- CSS to style the file input field as button and adjust the Bootstrap progress bars -->
+    <link rel="stylesheet" href="{{ STATIC_URL }}css/bootstrap-image-gallery.min.css">
+    <link rel="stylesheet" href="{{ STATIC_URL }}css/jquery.fileupload-ui.css">
+    <link rel="stylesheet" href="{{ STATIC_URL }}css/sigma.css">
+
+    <!-- Load JS after CSS -->
+    <script type="text/javascript" src="{{ STATIC_URL }}js/jquery.min.js"></script>
+    <script type="text/javascript" src="{{ STATIC_URL }}js/jquery.ui.widget.js"></script>
+
+    <script type="text/javascript" src="{{ STATIC_URL }}js/sigma.min.js"></script>
+    <script type="text/javascript" src="{{ STATIC_URL }}js/sigma.parseGexf.js"></script>
+    <script type="text/javascript" src="{{ STATIC_URL }}js/sigma.forceatlas2.js"></script>
+    <script type="text/javascript" src="{{ STATIC_URL }}js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="{{ STATIC_URL }}js/bootstrap-tab.js"></script>
+
+	<!-- Shim to make HTML5 elements usable in older Internet Explorer versions -->
+	<!--[if lt IE 9]><script type="text/javascript" src="{{ STATIC_URL }}js/html5.js"></script><![endif]-->
+</head>
+<body>
+<div class="navbar navbar-fixed-top">
+	<div class="navbar-inner">
+		<div class="container">
+			<a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+			</a>
+			<a class="brand" href="/">PhageScan</a>
+
+			<div class="nav-collapse">
+				<ul class="nav">
+					<!--todo create an active button -->
+					<!--<li class="active"><a href="#">Upload</a></li>-->
+					<!--todo create landing page link for home-->
+					{% if user.is_authenticated %}
+						<li><a href="{% url 'my-sample-list' %}">My Samples</a></li>
+						<li><a href="{% url 'all-sample-list' %}">All Samples</a></li>
+						<li><a href="{% url 'scan-list' %}">All Scans</a></li>
+						<li><a href="{% url 'upload-new' %}">Upload New Samples</a></li>
+						<li><a>|</a></li>
+						{% if user.is_staff %}
+						{#	todo allow non staff to still see system status #}
+						<li><a href="{% url 'worker-list' %}">System Status</a></li>
+						{% endif %}
+						<li><a>|</a></li>
+						<li><a href="{% url 'account' %}">{{ user.username }}</a></li>
+						<li><a href="{% url 'logout' %}">Logout</a></li>
+					{% endif %}
+				</ul>
+			</div>
+		</div>
+	</div>
+</div>
+{% block content %}
+{% endblock %}
+
+{% include "pagination_frag.html" %}
+</body>
+</html>

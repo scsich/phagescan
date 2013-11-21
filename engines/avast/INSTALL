@@ -1,0 +1,113 @@
+
+1. Install necessary OS packages.
+
+If running Ubuntu:
+$ sudo apt-get install $(< [this_directory]/PACKAGES.ubuntu)
+
+If running CentOS:
+TODO
+
+----
+
+2. Acquire libavastengine.
+
+Installation files are available here: 
+http://www.avast.com/download-software#tab2
+
+Select the avast! for Linux/Unix server most appropriate for your environment.  
+
+NOTE: Avast for linux is no longer available for download. It has reached 
+end-of-life. Current users, like us, can continue using the version we have as 
+well as downloading A/V dat updates.
+
+----
+
+3. Install libavastengine.
+
+$ sudo dpkg -i libavastengine-4.7.6-i586.deb
+
+NOTE: This step will attempt to fetch the latest virus definitions from avast! 
+and will install a cron job to check for updates on a daily basis.  We will 
+remove this cron job in the next step as a deployed avast! node is assumed to 
+be lacking an Internet connection.  This auto-update (not the cron job) might 
+have been useful if it actually worked. Unfortunately it does not, so we will 
+run a manual update anyway.
+
+Remove the auto-update cron job:
+$ sudo crontab -e
+Comment out the line that calls avast!'s update script.
+
+----
+
+4. Install avast! license.
+
+$ sudo cp License.dat /var/lib/avast4/License.dat
+
+NOTE: The way we are currently using Avast does not check for a license, so you 
+can skip this step if you need to do development/testing and do not have access 
+to the valid license.
+
+----
+
+5. Update definitions.
+
+$ sudo avastvpsupdate.sh
+
+----
+
+6. Increase your kernel's SHMMAX variable.  
+
+SHMMAX is the maximum size of shared memory allowed.  avast! requires a larger 
+SHMMAX value than is typical for default settings.  If your SHMMAX is already 
+larger than 128000000, then skip to the next step.
+
+You can check your current SHMMAX thusly:
+$ cat /proc/sys/kernel/shmmax
+
+6a. Set the running SHMMAX to a higher value:
+$ sudo sysctl -w kernel.shmmax=128000000
+
+6b. Persist this higher value:
+$ sudo su
+$ echo "kernel.shmmax=128000000" >> /etc/sysctl.conf
+$ exit
+
+----
+
+7. Extract avastcmd.
+
+Acquire this file: avast4server-3.2.1-i586.tar.gz.
+
+Extract a single binary from this archive to a location that PhageScan expects it:
+$ tar -zxvf avast4server-3.2.1-i586.tar.gz avast4server-3.2.1-i586/bin/avastcmd
+$ sudo mkdir -p /opt/avast/bin
+$ sudo mv avast4server-3.2.1-i586/bin/avastcmd /opt/avast/bin
+$ rm -rf ./avast4server-3.2.1-i586
+
+----
+
+8. (Optional) Verify correct installation by scanning the EICAR test file and blat.ex_.
+
+7a. avast! provides no convenient means to explicitly tell the scanner to take 
+no action upon discovery of an "infected" file.  Since we don't want to delete 
+or "repair" our EICAR file, we first copy our test files to a new location on 
+the off chance that avast! decides to modify these files.
+$ cp -r [Project_root_dir]/engines/generic/test/file /tmp/file
+
+7b. Run avast! on copied files:
+$ /opt/avast/bin/avastcmd /tmp/file
+
+7c. Successful output should look like the following:
+/tmp/file/eicar.com.txt	[infected by: EICAR Test-NOT virus!!!]
+/tmp/file/blat.ex_	[OK]
+/tmp/file/evil.pdf	[infected by: JS:Pdfka-gen [Expl]]
+#
+# Statistics:
+#
+# scanned files: 	3
+# scanned directories: 	1
+# infected files: 	2
+# total file size: 	139.8 kB
+# virus database: 	130210-1 10.02.2013
+# test elapsed: 	0s 8ms
+#

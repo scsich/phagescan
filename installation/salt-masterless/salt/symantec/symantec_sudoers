@@ -1,0 +1,3 @@
+# avuser CANNOT requiretty or our sudo commands to call symscan will fail.
+Defaults:avuser !requiretty
+ALL	ALL = (ALL:ALL) NOPASSWD: /root/av_sig_updater.sh symantec, /etc/init.d/symcscan, /opt/SYMCScan/ssecls/ssecls

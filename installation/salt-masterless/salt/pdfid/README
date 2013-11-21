@@ -1,0 +1,14 @@
+
+PDFiD can run on any linux host containing current versions of python, with
+no special modules. So, this salt state is a noop.
+These instructions assume that your vm was built using vagrant with the
+salt-vagrant provisioner.
+
+
+You can implement these salt states by running the following command
+from within the vm:
+
+$ sudo salt-call state.sls pdfid
+
+There output should end with "local:" colored green.
+

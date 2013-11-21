@@ -1,0 +1,11 @@
+build-essential		
+libglib2.0-dev
+python-dev
+python-pip
+python-virtualenv
+python-docutils
+python-sphinx
+libboost-python-dev
+libfreetype6-dev
+libpng-dev
+libpq-dev

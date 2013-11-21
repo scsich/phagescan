@@ -1,0 +1,20 @@
+/* sigma.js context : */
+.sigma-parent {
+    position: relative;
+    border-radius: 4px;
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    background: #222;
+    height: 500px;
+}
+.sigma-expand {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+}
+.buttons-container{
+    padding-bottom: 8px;
+    padding-top: 12px;
+}
