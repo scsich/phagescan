@@ -14,6 +14,8 @@ from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
 from scanworker.result import ScanRunErrorHandlerTask, ScanRunResultHandlerTask, ScanRunFinalizerTask
 from virusscan.models import ScanRunResult
+import logging
+logr = logging.getLogger(__name__)
 
 # converts # of Bytes into something more human-readable
 # credit: http://stackoverflow.com/questions/1094841/reusable-library-to-get-human-readable-version-of-file-size
@@ -109,6 +111,7 @@ class FileSampleManager(models.Manager):
 	def create_sample_from_file_and_user(self, f, user, kick_off_scan=False):
 		sha256_hash = self.model.filename_hasher(f.read())
 		filename = f.name
+		logr.debug("Sample received: {0}".format(filename))
 
 		try:
 			a = self.get(sha256=sha256_hash)

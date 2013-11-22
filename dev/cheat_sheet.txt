@@ -1,3 +1,6 @@
+==== vagrant setup ====
+Set sources in dev/vagrant_prep.py
+python dev/vagrant_prep.py
 
 
 ==== start up =====

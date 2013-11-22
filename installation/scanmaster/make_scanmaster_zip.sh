@@ -34,7 +34,6 @@ monitor/* \
 nsrl/* \
 sample/* \
 scaggr/* \
-scanrun/* \
 scanworker/* \
 templates/* \
 virusscan/* \

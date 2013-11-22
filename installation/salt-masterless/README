@@ -1,18 +1,32 @@
-In this directory you need to create 3 directories to enable the salt
-states to function.
+You need to create 3 directories to enable the salt states to function in a masterless
+environment (not production).
 
-1. A directory named "pillar", use pillar-sample as a template.
-Update settings.sls and top.sls file with your values.
+To do it automatically, see PROJECT_ROOT/dev/vagrant_prep.py
 
-2. A directory named "install-media". In there you should place
-your installation media in separate subdirectories.
+To do it manually, do the following:
+1. installation/salt-masterless/pillar
+Copy pillar-sample as a template. Update settings.sls and top.sls files with your values.
 
-3. A directory named "licenses". In there you should place
-your commercial licenses in separate subdirectories.
+2. installation/install-media/{scan_task_master, scan_worker}
+Create the directory installation/install-media. In there you should place your installation
+media in separate sub-directories. Most importantly, you MUST create the two sub-directories
+'scan_task_master' and 'scan_worker'.
+Run installation/scanmaster/make_scanmaster_zip.sh and place the .zip into 'scan_task_master'.
+Run installation/scanworker/make_scanworker_zip.sh and place the .zip into 'scan_worker'.
 
-For the install-media and licenses directories, the subdirectories should
-be named to match the names of the salt states that are using those files.
-i.e. salt states in salt/avast/ would use install-media/avast/ and licenses/avast/
+3. installation/licenses
+In there you should place your commercial licenses in separate sub-directories.
 
-Refer to the salt states that you intend to use for the proper naming of your license
-and install-media files.
+Note: For the install-media and licenses directories, the sub-directories should be named
+similarly to the names of the salt states that are using those files. Refer to the salt
+states that you intend to use for the proper naming of your license and install-media
+sub-directories and files.
+
+i.e.
+salt states in
+installation/salt-masterless/salt/avast/
+
+would have install-media and licenses in:
+installation/install-media/avast/
+installation/licenses/avast/
+
