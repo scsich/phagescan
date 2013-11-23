@@ -23,6 +23,8 @@ from sample.abstract import AbstractFileSample
 from scaggr.settings import PENDING_EXPIRE, ARTIFACT_SAVE_DIR, IMAGE_SAVE_DIR, QUEUE_WORKER_CACHE_KEY
 from scanworker.file import PickleableFileSample
 from scanworker.tasks import VALID_SCANNERS_NO_INSTALL_CHECK, EngineUpdateTask
+import logging
+logr = logging.getLogger(__name__)
 
 
 class TimeoutException(Exception):
@@ -156,6 +158,7 @@ class ScanRunManager(models.Manager):
 		"""
 		This creates a pending scan run in the database, it does not actually run the task and must be called through the sample
 		"""
+		logr.debug("Creating pending scan run from sample with task_id '{0}'.".format(task_id))
 		return self.create(task_id=task_id)
 
 	def get_latest_scans_distinct_sample(self):
@@ -272,7 +275,7 @@ class ScannerTypeWorkerImage(models.Model):
 	instance_type = models.CharField(max_length=32,
 	                                 choices=[('m1.small', "small"), ('m1.medium', "medium"), ('m1.large', "large")],
 	                                 default="m1.medium", null=False, blank=False)
-	needed_copies = models.PositiveSmallIntegerField(default = 1, null = False, blank = False)
+	needed_copies = models.PositiveSmallIntegerField(default=1, null=False, blank=False)
 	objects = ScannerTypeWorkerImageManager()
 
 	def __unicode__(self):
@@ -303,7 +306,7 @@ class ScannerTypeWorkerImage(models.Model):
 		return ScannerTypeWorkerImage.objects.get_all_instances_running_scanner_image_of_states(self.image_label, ['pending'])
 
 	def get_all_pending_running_instances(self):
-		r =  self.get_pending_instances() + self.get_running_instances()
+		r = self.get_pending_instances() + self.get_running_instances()
 		return r
 
 	def calculate_needed_image_copies(self):
@@ -313,23 +316,27 @@ class ScannerTypeWorkerImage(models.Model):
 
 class ScannerTypeManager(models.Manager):
 	def set_active_by_q_dict(self, q_dict):
+
+		logr.debug("Setting active queues.")
 		all_active_names = set()
 		for wq in q_dict.values():
 			map(all_active_names.add, [qdef['name'] for qdef in wq])
 
-		if len(all_active_names) != 0:
-			q_object = reduce(operator.ior,  [Q(name__iexact = name) for name in all_active_names])
-			scanners_to_update = ScannerType.objects.filter(q_object)
-			scanners_to_update.update(active_workers = True)
+		logr.debug("Active queues: \n'{0}'.".format(all_active_names))
 
-			scanners_to_deactivate = ScannerType.objects.filter(~Q(pk__in = scanners_to_update))
-			scanners_to_deactivate.update(active_workers = False)
+		if len(all_active_names) != 0:
+			q_object = reduce(operator.ior,  [Q(name__iexact=name) for name in all_active_names])
+			scanners_to_update = ScannerType.objects.filter(q_object)
+			scanners_to_update.update(active_workers=True)
+
+			scanners_to_deactivate = ScannerType.objects.filter(~Q(pk__in=scanners_to_update))
+			scanners_to_deactivate.update(active_workers=False)
 		else:
 			scanners_to_deactivate = ScannerType.objects.all()
-			scanners_to_deactivate.update(active_workers = False)
+			scanners_to_deactivate.update(active_workers=False)
 
 	def get_active_scanners_for_display(self):
-		return self.filter(scanrunresult__isnull = False).distinct('pk')
+		return self.filter(scanrunresult__isnull=False).distinct('pk')
 
 	def get_scanner_by_adapter(self, scan_adapter_class_def_or_class_uninst):
 		scan_adapter_class_def_or_class = scan_adapter_class_def_or_class_uninst
@@ -382,7 +389,7 @@ class ScannerType(models.Model):
 	class_name = models.CharField(max_length=254, null=False)
 	platform = models.CharField(max_length=128, choices=PLATFORM_CHOICES, null=False)
 	worker_image = models.ForeignKey(ScannerTypeWorkerImage, null=False)
-	active_workers = models.BooleanField(default = True)
+	active_workers = models.BooleanField(default=True)
 
 	def get_short_name(self):
 		return self.name.split('.')[-1]
@@ -469,7 +476,7 @@ class ScannerType(models.Model):
 	# 	map(self.update_targeted_worker, all_workers_for_scanner)
 
 	def __str__(self):
-		return "%s/%s" % (self.name, self.platform)
+		return "{0}/{1}".format(self.name, self.platform)
 
 	class Meta:
 		unique_together = (('name', 'platform'),)
@@ -600,12 +607,14 @@ class ScanRun(models.Model):
 		else:
 			task_id = celery_scan_task_or_result.id
 		return self.scanrunresult_set.create(task_id=task_id,
-		                                     scanner_type=django_task_type_model_entry, pending = pending, traceback=traceback)
+		                                     scanner_type=django_task_type_model_entry, pending=pending, traceback=traceback)
 
 	def get_scan_tasks_and_create_pending_db_entries(self, timeout=20):
 		scanner_types = ScannerType.objects.all()
 		initd_subtasks = []
-
+		logr.debug("Have '{0}' scanner_types.".format(scanner_types.count()))
+		logr.debug("Getting scan tasks and creating pending db entries for each.")
+		if not scanner_types: logr.error("ScannerType.objects.all() returned 0 scanner types.")
 		for task_type_db in scanner_types:
 
 			# Queues object below is required as a collection of queues that are eventually consumed by amqp
@@ -621,6 +630,7 @@ class ScanRun(models.Model):
 				db_entry = self.create_db_entry_for_scan_task(sub_task, task_type_db)
 
 			else:
+				logr.debug("db entry: no active worker for this task.")
 				db_entry = self.create_db_entry_for_scan_task(sub_task,
 				                                              task_type_db,
 				                                              traceback="No active worker for task at launch time",

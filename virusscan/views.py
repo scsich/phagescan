@@ -50,7 +50,7 @@ class ScannerTypeWorkerView(ListView):
 	queryset = ScannerType.objects.get_active_scanners_for_display()
 
 	def get_context_data(self, **kwargs):
-		ctx =  super(ScannerTypeWorkerView, self).get_context_data(**kwargs)
+		ctx = super(ScannerTypeWorkerView, self).get_context_data(**kwargs)
 		from scanworker.masterworker import MasterWorkerTask
 		from scanworker.result import ScanRunErrorHandlerTask, ScanRunFinalizerTask, ScanRunResultHandlerTask
 		if ScannerType.objects.count() == 0:

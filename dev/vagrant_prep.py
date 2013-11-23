@@ -141,9 +141,10 @@ def update_source_code_archives(archive_type):
 	#print "SCRIPT: {0}, {1}".format(script_path, os.path.exists(os.path.join(script_path, archive_type['SCRIPT_NAME'])))
 
 	# TODO: use native python git/zip modules instead of calling out to shell scripts.
-	subprocess.call(os.path.join('.', archive_type['SCRIPT_NAME']), cwd=script_path)
+	subprocess.call(os.path.join('.', archive_type['SCRIPT_NAME']), cwd=script_path, shell=True)
 
 	print "Moving archive to {0}".format(dst_path)
+	os.mkdir(dst_path)
 	shutil.copy(src_path, dst_path)
 	os.unlink(src_path)
 

@@ -57,18 +57,18 @@ CONSTANCE_CONFIG = {
 	'IMAGE_MAPPING_DEF_KEY' : ('default', "Default key to use for image mapping"),
 	'DEFAULT_WORKER_IMAGE_MAPPING' : ('ubuntu-image', "Default image for scanworker that doesn't have a custom scanner image set"),
 	'Panda_EC2_IMAGE' : ('windowsxp-image', "Default image for Panda AV Scanner, notice lowercase prefix of key"),
-	'Symantec_EC2_IMAGE' : ('windowsxp-image', "Default image for Symantec AV Scanner, notice lowercase prefix of key"),
-	'NUMBER_OF_WORKER_IMAGES_PER_SCANNER' : (3, "Number of worker images to spin up per scanner type"),
-	'EC2_URL' : ("http://10.1.0.4:8773/services/Cloud", "URL to EC2-like API or EC2 Itself"),
-	'EC2_SECRET' : ("20dfd71c941f4ca896803868457b385e", "Secret"),
-	'EC2_ACCESS' : ("4578e4c8d72a43218db078568ff75bd5", "Access Hash"),
+	'Symantec_EC2_IMAGE' : ('centos-image', "Default image for Symantec AV Scanner, notice lowercase prefix of key"),
+	'NUMBER_OF_WORKER_IMAGES_PER_SCANNER' : (2, "Number of worker images to spin up per scanner type"),
+	'EC2_URL' : ("http://10.0.0.1:8773/services/Cloud", "URL to EC2-like API or EC2 Itself"),
+	'EC2_SECRET' : ("1234567890abcdef1234567890abcde", "Secret"),
+	'EC2_ACCESS' : ("1234567890abcdef1234567890abcde", "Access Hash"),
 	'EC2_TIMEOUT' : (5, "The amount of time it takes an EC2 connection to timeout"),
 	'EC2_USERDATA' : ("#cloud-config\nmanage_etc_hosts: True", "User data to pass to cloud-init"),
 	'EC2_KEYPAIR' : ("stacky", "The label for the EC2 Keypair")
 }
 CONSTANCE_BACKEND = 'constance.backends.database.DatabaseBackend'
 
-DEBUG = False
+DEBUG = True
 ALLOWED_HOSTS = ['*']
 #ALLOWED_HOSTS = ['wwwhost.example.com']
 
@@ -244,6 +244,7 @@ INSTALLED_APPS = (
 #}
 LOG_LEVEL = 'DEBUG' if DEBUG else 'INFO'
 LOG_DIR = os.path.join(PROJECT_ROOT, 'logs')
+CELERYD_HIJACK_ROOT_LOGGER = False
 if not os.path.isdir(LOG_DIR):
 	os.mkdir(LOG_DIR)
 
@@ -272,7 +273,7 @@ LOGGING = {
 						'class': 'django.utils.log.NullHandler',
 				},
 				'default': {
-						'level': LOG_LEVEL,
+						'level': 'DEBUG',
 						'formatter': 'standard',
 						'class': 'logging.handlers.RotatingFileHandler',
 						'filename': 'logs/django_debug.log',
@@ -280,7 +281,7 @@ LOGGING = {
 						'backupCount': 2,
 				},
 				'request_handler': {
-						'level': LOG_LEVEL,
+						'level': 'DEBUG',
 						'formatter': 'standard',
 						'class': 'logging.handlers.RotatingFileHandler',
 						'filename': 'logs/django_request.log',
@@ -288,27 +289,42 @@ LOGGING = {
 						'backupCount': 2,
 				},
 				'console': {
-						'level': LOG_LEVEL,
+						'level': 'DEBUG',
 						'formatter': 'standard',
 						'class': 'logging.StreamHandler'
 				},
 		},
 		'loggers': {
-				'': {
-						'handlers': ['default', 'console'],
-						'level': LOG_LEVEL,
+				'django': {
+						'handlers': ['null'],
+						'level': 'INFO',
 						'propagate': True,
-						},
+				},
 				'django.request': {
-						'handlers': ['request_handler', 'console'],
+						'handlers': ['request_handler'],
+						'level': 'INFO',
+						'propagate': True,
+				},
+				'celery.redirected': {
+						'handlers': ['default'],
 						'level': LOG_LEVEL,
 						'propagate': False,
-						},
+				},
+				'celery.worker': {
+						'handlers': ['default'],
+						'level': LOG_LEVEL,
+						'propagate': False,
+				},
+				'': {
+						'handlers': ['default'],
+						'level': LOG_LEVEL,
+						'propagate': False,
+				},
 		},
 		'root': {
-				'handlers': ['default', 'console'],
-				'level': 'INFO',
-				},
+				'handlers': ['console'],
+				'level': LOG_LEVEL,
+		},
 }
 
 from scanworker.commonconfig import *

@@ -70,6 +70,7 @@ class EngineWorkerTask(Task):
 		from kombu import Queue
 		# todo include these kwargs below and figure out how to get them into the task as well auto_delete= True, queue_arguments={"x-message-ttl": 60000}
 		qname = self._import_scanner()().q_name
+		self.logger.debug("Got celery queue: '{0}'.".format(qname))
 		return Queue(qname, routing_key=qname, auto_delete=True, queue_arguments={"x-message-ttl": 60000 * 60})
 
 	@classmethod
@@ -85,15 +86,16 @@ class EngineWorkerTask(Task):
 
 		if not s.is_installed():
 			raise ScannerIsNotInstalled()
-
+		self.logger.debug("scanning file: '{0}'.".format(f))
 		return s.scan(f)
 
 	def _declare_queue(self):
 		q_obj = self.celery_queue
+		self.logger.debug("declaring celery queue for '{0}'.".format(q_obj.name))
 		self.app.amqp.queues.add(q_obj)
 
 	@classmethod
-	def declare_celery_queue(cls, care_about_install = False):
+	def declare_celery_queue(cls, care_about_install=False):
 		ec = cls()
 		if care_about_install:
 			if ec._import_scanner()().is_installed():
@@ -169,8 +171,8 @@ class GenericScanners:
 
 			except:
 				# todo: protect against the scanners throwing exceptions and breaking the whole import process
-				print "Unhandled exception"
-				traceback.print_exc()
+				logr.error("Unhandled exception")
+				logr.error(traceback.print_exc())
 
 	@property
 	def names(self):

@@ -23,7 +23,7 @@ class MasterWorkerTask(Task):
 		"""
 		from django import db
 		db.close_connection()
-
+		self.logger.debug("Launching all scanning subtasks for sample.")
 		sample._launch_all_scanning_subtasks()
 
 

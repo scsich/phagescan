@@ -172,10 +172,10 @@ class FileSample(AbstractFileSample):
 		try:
 			return self.other_name.filter(pk__lte=self.pk)[0].filename
 		except IndexError:
-			print("[!] FileSample.Filename Index error. filename going to be: {0}".format(self.pk))
+			logr.debug("[!] FileSample.Filename Index error. filename going to be: {0}".format(self.pk))
 			pass
 		except ObjectDoesNotExist:
-			print("[!] FileSample.Filename ObjectDoesNotExist error. filename going to be: {0}".format(self.pk))
+			logr.debug("[!] FileSample.Filename ObjectDoesNotExist error. filename going to be: {0}".format(self.pk))
 			pass
 		return str(self.pk)
 
@@ -224,11 +224,12 @@ class FileSample(AbstractFileSample):
 		self.other_name.add(OtherFilename.objects.create_new_by_filename(filename))
 
 	def _get_all_scanning_tasks_and_create_db_entries(self):
-		task_id =  str(uuid())
-
+		task_id = str(uuid())
+		logr.debug("Getting scanning tasks for task_id '{0}'.".format(task_id))
 		scan_run = self.scanrun_set.create_pending_scan_run_from_sample( task_id)
 		scan_run.save()
 		jobs = scan_run.get_scan_tasks_and_create_pending_db_entries(timeout=self.scan_timeout)
+		logr.debug("task_id '{0}' has '{1}' jobs.".format(task_id, len(jobs)))
 
 		return scan_run, jobs
 
@@ -236,23 +237,25 @@ class FileSample(AbstractFileSample):
 		err_handler = ScanRunErrorHandlerTask()
 		result_handler = ScanRunResultHandlerTask()
 		# filter out none jobs that we don't have to launch
-
+		logr.debug("Enumerating scanning subtasks based on '{0}' jobs.".format(len(jobs)))
 		filt_jobs = filter(lambda jobdb: jobdb[0] is not None, jobs)
 
 		r = [job.apply_async(timeout=self.scan_timeout * 0.9,
 		                 link_error=subtask(err_handler, queue=err_handler.queue),
-		                 link=subtask(result_handler, args=( db_entry.task_id,), queue=result_handler.queue),
+		                 link=subtask(result_handler, args=(db_entry.task_id,), queue=result_handler.queue),
 		                 ) for job, db_entry in filt_jobs]
 		return r
 
 	def _launch_finializer_task(self, scan_run):
 		# todo replace seconds with self.scan_timeout
+		logr.debug("Launching finalizer task.")
 		return ScanRunFinalizerTask.apply_async(args=[scan_run],
 		                                        eta=(datetime.datetime.utcnow() +
 		                                             datetime.timedelta(seconds=config.SCANRUN_TIMEOUT)))
 
 	def _launch_all_scanning_subtasks(self):
 		scan_run, jobs = self._get_all_scanning_tasks_and_create_db_entries()
+		logr.debug("Launching scanning subtasks.")
 		self._launch_all_scanning_subtasks_after_task_enum(jobs)
 		self._launch_finializer_task(scan_run)
 
@@ -264,6 +267,7 @@ class FileSample(AbstractFileSample):
 		"""
 		if not self.scanrun_set.have_pending_non_expired_scans() or force:
 			self.save()
+			logr.debug("Sending scan to MasterWorkerTask.")
 			return MasterWorkerTask.apply_async(args=[self], timeout=timeout) if timeout else MasterWorkerTask.apply_async(args=[self])
 
 
