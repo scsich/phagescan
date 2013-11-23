@@ -39,14 +39,14 @@ conf = {
 	'MEDIA': {
 		'NAME': 'install-media',
 		'DST_PATH': 'installation/install-media',  # relative to PROJECT_ROOT
-		'SRC_PATH': '/home/nick/Documents/narf/MassScan/installation/install-media', # absolute path or relative to PROJECT_ROOT
-		'SRC_TYPE': 'local', # 'none', 'local', or 'git'
+		'SRC_PATH': '', # absolute path or relative to PROJECT_ROOT
+		'SRC_TYPE': 'none', # 'none', 'local', or 'git'
 	},
 	'LICENSES': {
 		'NAME': 'licenses',
 		'DST_PATH': 'installation/licenses', # relative to PROJECT_ROOT
-		'SRC_PATH': 'ssh://narfgitrepo/mass-scan-licenses-bt.git', # absolute path or relative to PROJECT_ROOT
-		'SRC_TYPE': 'git', # 'none', 'local', or 'git'
+		'SRC_PATH': '', # absolute path or relative to PROJECT_ROOT
+		'SRC_TYPE': 'none', # 'none', 'local', or 'git'
 	},
 	'WORKER': {
 		'NAME': 'scanworker',

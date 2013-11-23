@@ -1,7 +1,7 @@
 
 from datetime import timedelta
-from celery import Task
-from celery.task import PeriodicTask
+#from celery import Task
+from celery.task import PeriodicTask, Task
 
 
 class RescanNonExpiredNonInfectedFiles(PeriodicTask):
