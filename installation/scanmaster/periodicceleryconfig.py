@@ -8,8 +8,8 @@ djcelery.setup_loader()
 from scaggr.settings import *
 
 
-CELERYBEAT_SCHEDULER='djcelery.schedulers.DatabaseScheduler'
+CELERYBEAT_SCHEDULER = 'djcelery.schedulers.DatabaseScheduler'
 CELERY_IMPORTS = ('virusscan.tasks',)
 from virusscan.tasks import get_periodic_queues
 
-CELERY_QUEUES=get_periodic_queues()
+CELERY_QUEUES = get_periodic_queues()

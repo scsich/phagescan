@@ -1,5 +1,5 @@
 dulwich
-django==1.5
+django>=1.5,<1.6
 django-celery==3.0.23
 django-constance[database]
 django-picklefield
