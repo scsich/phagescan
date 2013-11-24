@@ -26,13 +26,11 @@ class ScanRunResultHandlerTask(Task):
 
 	def run(self, generic_evil_result, task_id):
 		self.logger.debug("Starting scanrun task '{0}'.".format(task_id))
-		print("Starting scanrun task '{0}'.".format(task_id))
 		scan_run = ScanRun.objects.get(scanrunresult__task_id=task_id)
 		scan_run.mark_started()
 
 		result = AsyncResult(task_id)
 		self.logger.debug("Populating scanrun results for task '{0}'.".format(task_id))
-		print("Populating scanrun results for task '{0}'.".format(task_id))
 		scan_run.populate_scan_run_result_from_scanner(result)
 		# todo mark the scan run as a success if we're the last one in
 

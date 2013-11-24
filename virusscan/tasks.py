@@ -19,10 +19,20 @@ class RescanNonExpiredNonInfectedFiles(PeriodicTask):
 		map(FileSample.rescan, FileSample.objects.samples_for_periodic_rescan())
 
 
+#class EngineActiveMarkerTask(PeriodicTask):
 class EngineActiveMarkerTask(Task):
+	"""
+	Periodic task to ensure active_queue status is updated.
+
+	This is only used in production.
+	To enable,
+	- change class inheritance from 'Task' to 'PeriodicTask' above
+	- uncomment 'run_every' class variable below.
+	"""
 	ignore_result = True
 	queue = 'EngineActiveMarkerTask'
 	routing_key = 'EngineActiveMarkerTask'
+	#run_every = timedelta(minutes=15)
 	logger = get_task_logger(__name__)
 
 	def run(self):
@@ -31,7 +41,7 @@ class EngineActiveMarkerTask(Task):
 		from virusscan.models import ScannerType, get_active_q_dict_from_cache
 		active_queues = get_active_q_dict_from_cache(inspect=self.app.control.inspect())
 
-		self.logger.debug("Settings active queues\n'{0}'.".format(active_queues))
+		self.logger.debug("Setting active queues\n'{0}'.".format(active_queues))
 		ScannerType.objects.set_active_by_q_dict(active_queues)
 
 

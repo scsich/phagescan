@@ -68,7 +68,7 @@ CONSTANCE_CONFIG = {
 }
 CONSTANCE_BACKEND = 'constance.backends.database.DatabaseBackend'
 
-DEBUG = True
+DEBUG = False
 ALLOWED_HOSTS = ['*']
 #ALLOWED_HOSTS = ['wwwhost.example.com']
 
@@ -197,7 +197,6 @@ INSTALLED_APPS = (
 	'constance', # for live settings to showup in the admin
 	# nose should come after south, so nose test is used instead of south test.
 	'django_nose',
-
 	'accounts',
 	'sample',
 	'virusscan',
@@ -242,9 +241,13 @@ INSTALLED_APPS = (
 #			},
 #	}
 #}
+
+# Remove this once we support celery >=3.1.x
+# It stops celery from eating the python logging messages.
+CELERYD_HIJACK_ROOT_LOGGER = False
+
 LOG_LEVEL = 'DEBUG' if DEBUG else 'INFO'
 LOG_DIR = os.path.join(PROJECT_ROOT, 'logs')
-CELERYD_HIJACK_ROOT_LOGGER = False
 if not os.path.isdir(LOG_DIR):
 	os.mkdir(LOG_DIR)
 

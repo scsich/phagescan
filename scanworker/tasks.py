@@ -2,7 +2,7 @@
 import sys
 import traceback
 import pkgutil
-from celery.task import Task
+from celery.task import Task, PeriodicTask
 from celery.utils.log import get_task_logger
 from celery.app.registry import TaskRegistry
 import logging
@@ -19,9 +19,9 @@ LINUX_PLATFORM = "Linux"
 
 class EngineUpdateTask(Task):
 	"""
-	This is a generic task which updates the engine that we pass in on this box.
+	This is a task which updates the engine that we pass in on this box.
 
-	The box itself is reponsible for taking itself off the queue.
+	The box itself is responsible for taking itself off the queue.
 	"""
 	
 	def run(self, engine_class, update_file = None):

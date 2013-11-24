@@ -39,9 +39,9 @@ Replace the user name and password with the credentials that you would like to
 use and run the following commands:
 $ sudo rabbitmqctl add_user phagemasteruser longmasterpassword
 $ sudo rabbitmqctl add_user phageworkeruser longworkerpassword
-$ sudo rabbitmqctl add_vhost vhostname
-$ sudo rabbitmqctl set_permissions -p vhostname phagemasteruser ".*" ".*" ".*"
-$ sudo rabbitmqctl set_permissions -p vhostname phageworkeruser ".*" ".*" ".*"
+$ sudo rabbitmqctl add_vhost phage
+$ sudo rabbitmqctl set_permissions -p phage phagemasteruser ".*" ".*" ".*"
+$ sudo rabbitmqctl set_permissions -p phage phageworkeruser ".*" ".*" ".*"
 
 If the master and worker hosts use different user/pass combinations to 
 communicate with the broker, you must use the commands as written above.  
@@ -72,6 +72,9 @@ This should prompt if you wish to create a django superuser.  You do.
 For development define devuser/devpass.  Give a fake e-mail addr.
 
 $ python manage.py migrate --settings=scaggr.settings
+
+This will create the table for the DatabaseCache
+$ python manage.py createcachetable --settings=scaggr.settings cache
 
 ----
 
@@ -112,5 +115,13 @@ $ DJANGO_SETTINGS_MODULE=scaggr.settings celeryd --config=periodicceleryconfig -
 
 Run as same user that you used to start celeryd.
 $ python manage.py runserver -v 3 0.0.0.0:8000 --settings=scaggr.settings
+
+----
+
+11. Production extras
+
+In production, you should enable the EngineActiveMarkerTask periodic task in virusscan/tasks.py.
+Also, schedule update_definitions to run periodically. virusscan/models.py:ScannerType.update_definitions().
+
 
 

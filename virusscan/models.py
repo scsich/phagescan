@@ -81,9 +81,13 @@ def get_active_q_dict_from_cache(inspect=None, reconnect = True):
 
 		return return_active_queue_not_none(active_q_dict)
 	except InvalidCacheBackendError:
+		logr.error("InvalidCacheBackendError when attempting to get active_queue dict.")
 		active_q_dict = get_active_q_dict()
 		return return_active_queue_not_none(active_q_dict)
-	except:
+	except Exception, e:
+		logr.error("Error getting active_queue dict from cache. Ensure the 'cache' table was created in the database.")
+		logr.error("python manage.py createcachetable --settings=scaggr.settings cache")
+		logr.error("Original exception message: '{0}'.".format(e.message))
 		raise Exception
 
 
@@ -370,6 +374,11 @@ class ScannerTypeManager(models.Manager):
 		return self.get_scanner_by_adapter(adapter)
 
 	def create_all_valid_scanner_db_entries(self):
+		"""
+		This must be called at least the first time django or a master celery worker starts.
+
+		ScannerType.objects.create_all_valid_scanner_db_entries()
+		"""
 		return map(self.get_scanner_by_task, VALID_SCANNERS_NO_INSTALL_CHECK())
 
 	def get_default_worker_image_label_for_name(self, name):
@@ -470,10 +479,12 @@ class ScannerType(models.Model):
 			return self.get_update_task(targeted_worker).subtask((self.get_scanner_engine_class(), ),
 			                                                     queue=targeted_worker)
 
-	# TODO: I don't think this is used. All of the engine tests call the update_definitions() in their engine class.
-	# def update_definitions(self):
-	# 	all_workers_for_scanner = self.get_all_task_workers()
-	# 	map(self.update_targeted_worker, all_workers_for_scanner)
+	def update_definitions(self):
+		"""
+		This should be run periodically on production systems to keep engine signature updated.
+		"""
+		all_workers_for_scanner = self.get_all_task_workers()
+		map(self.update_targeted_worker, all_workers_for_scanner)
 
 	def __str__(self):
 		return "{0}/{1}".format(self.name, self.platform)
@@ -612,6 +623,7 @@ class ScanRun(models.Model):
 	def get_scan_tasks_and_create_pending_db_entries(self, timeout=20):
 		scanner_types = ScannerType.objects.all()
 		initd_subtasks = []
+
 		logr.debug("Have '{0}' scanner_types.".format(scanner_types.count()))
 		logr.debug("Getting scan tasks and creating pending db entries for each.")
 		if not scanner_types: logr.error("ScannerType.objects.all() returned 0 scanner types.")
