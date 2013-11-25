@@ -23,7 +23,7 @@ Windows instructions were tested on Windows XP SP3.
 
 $ git config --global user.name "yourUserName"
 $ git config --global user.email you@domain.com
-$ git clone git@github.com:bsi/phagescan.git
+$ git clone git@github.com:scsich/phagescan.git
  
 Select your git branch:
 
