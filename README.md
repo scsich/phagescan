@@ -9,6 +9,11 @@ The current code allows you to:
 * Add new engines/analysis tools by writing a thin Python wrapper (tools can run on Linux or Windows VMs)
 * Isolate and monitor your "worker" VMs which actually execute the engines and perform scans (Openstack or EC2)
 
+# Discussion
+Our mailing list is here:
+
+[PhageScan Google Group](https://groups.google.com/forum/#!forum/phagescan)
+
 # What do I need?
 
 * Python 2.7
