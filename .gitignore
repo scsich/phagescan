@@ -26,3 +26,4 @@ celerybeat-schedule
 *.zip
 *.deb
 *~
+doc/_build/*
