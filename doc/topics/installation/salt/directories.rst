@@ -1,13 +1,18 @@
 .. this file replaces /installation/README and /installation/salt-masterless/README
 
+.. talk about which directories are needed.
+.. talk about where to put those dirs
+.. talk about how to make them automatically/manually
+
 ======================================
-Setup Directories for Dependency Files
+Salt Directories for Dependency Files
 ======================================
 
 These are the directories that will contain licenses and installation media for engine software.
 Salt will expect the dependency files in these locations.
 
 .. need to merge the following content.
+
 
 .. content from /installation/README
 

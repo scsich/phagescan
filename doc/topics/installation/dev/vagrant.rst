@@ -26,25 +26,64 @@ f. Once your VM is fully built, it is a good idea to halt it and
    experience problems during development.
 
 
-0. Clone the git repo to your development host
 
-# While this is a private repo, you need to be a collaborator and have your
-# public ssh key in your github profile.
+
+----
+
+0. Clone the git repo to your development host
 
 $ git config --global user.name "yourUserName"
 $ git config --global user.email you@domain.com
-$ git clone git@github.com:bsi/phagescan.git
+$ git clone git@github.com:scsich/phagescan.git
 
-
-1. Switch to the git branch you will be working in. Replace <mybranch>
-with your branch name.
+Select your git branch:
 
 $ cd phagescan
 $ git branch --all
 $ git checkout -b <mybranch> origin/<mybranch>
 
-The remainder of this document assumes that you are running commands
-from [Project_root_dir]
+The phagescan directory created by git will be referred to as
+[Project_root_dir] throughout the documentation.
+
+----
+
+1. Install necessary OS packages.
+
+If running Ubuntu:
+$ sudo apt-get install $(< [Project_root_dir]/PACKAGES.ubuntu)
+
+If running CentOS:
+
+We only used CentOS as a scanworker. So, skip the rest of this document
+and refer to the CentOS scanworker INSTALL instructions:
+[Project_root_dir]/installation/scanworker/INSTALL.CentOS
+
+----
+
+2. Build & activate a virtual environment
+$ virtualenv ~/psvirtualenv
+$ source ~/psvirtualenv/bin/activate
+
+Your prompt should look like this after:
+(psvirtualenv)[user@host]$
+
+If you need to deactivate the virtual env:
+(don't do this now) $ deactivate
+
+----
+
+3. Continue on to the next INSTALL file as appropriate for the build you are
+creating.
+
+If creating a development environment (scanmaster, scanworker, web server,
+IDE all on the same node):
+[Project_root_dir]/installation/dev/INSTALL
+
+If creating a production scanmaster node:
+[Project_root_dir]/installation/scanmaster/INSTALL
+
+If creating a production scanworker node:
+[Project_root_dir]/installation/scanworker/INSTALL
 
 
 
