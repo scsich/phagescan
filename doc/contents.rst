@@ -7,11 +7,14 @@ Table of Contents
 
    index
    topics/installation/index
+   topics/installation/salt/*
    topics/phagescanUI/*
    topics/master/index
    topics/workers/index
    topics/openstackUI/index
    topics/phagescanAdminUI/index
+   topics/development/*
+   topics/installation/dev/*
    topics/troubleshooting/*
 
 

@@ -3,6 +3,8 @@
 Building a ScanMaster VM
 ========================
 
+These instructions walk you through manually building a scan master VM/host.
+
 
 0. If you haven't completed [Project_root_dir]/INSTALL, complete the
 instructions listed there first.

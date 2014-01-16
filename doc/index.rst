@@ -13,7 +13,7 @@ The current code allows you to:
 Quick Start
 ===========
 
-Start by doing this.. TODO Install docs...
+The fastest way to get started is to follow the steps in our :doc:`Quick Installation Guide </topics/installation/index>`.
 
 What do I need?
 ===============

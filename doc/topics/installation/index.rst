@@ -1,11 +1,21 @@
 .. this file replaces the root /INSTALL file
 
-==================
-Installation Types
-==================
+.. _`VirtualBox website`: https://www.virtualbox.org/wiki/Downloads
+.. _`Ubuntu VirtualBox help`: https://help.ubuntu.com/community/VirtualBox/Installation
+.. _`Vagrantup website`: http://www.vagrantup.com/
+.. _`Salt provisioner`: http://docs.vagrantup.com/v2/provisioning/salt.html
+.. _`vagrant-salt plugin`: https://github.com/saltstack/salty-vagrant
+
+
+============
+Installation
+============
 
 PhageScan is a very flexible framework. In its simplest form, it can be installed on a single laptop.
-In its more robust form, it requires a cloud computing environment. And you can select anything in between.
+In its most robust form, it requires a cloud computing environment. And you can select anything in between.
+
+Installation Types
+==================
 
 There are three primary installation types for PhageScan:
 
@@ -41,17 +51,17 @@ By default, Phagescan expects an Ubuntu host, but we have also used Mac OS X.
 On your host, install your preferred virtualization software and Vagrant.
 We use VirtualBox on Ubuntu or VMWare Fusion on Mac OS X for virtualization software.
 
-1. Use the latest version (>= 4.2) of VirtualBox and the VM Extension Pack from Oracle downloadable from the `VirtualBox website <https://www.virtualbox.org/wiki/Downloads>`_.
+1. Use the latest version (>= 4.2) of VirtualBox and the VM Extension Pack from Oracle downloadable from the `VirtualBox website`_.
 
-  * The version distributed by Ubuntu is too old; see `Ubuntu VirtualBox help <https://help.ubuntu.com/community/VirtualBox/Installation>`_.
+  * The version distributed by Ubuntu is too old; see `Ubuntu VirtualBox help`_.
 
-2. Use the latest version (>= v1.3.0) of Vagrant from the `Vagrantup website <http://www.vagrantup.com/>`_.
+2. Use the latest version (>= v1.3.0) of Vagrant from the `Vagrantup website`_.
 
   * The version distributed by Ubuntu is too old.
   * While Vagrant does have some support for Windows guests, we use Windows XP, which is not supported.
-  * Ensure your Vagrant installation has the `Salt provisioner <http://docs.vagrantup.com/v2/provisioning/salt.html>`_.
+  * Ensure your Vagrant installation has the `Salt provisioner`_.
     New versions of Vagrant (>= v1.3.0) have it by default. If you are using a 1.2.x version of Vagrant,
-    you will have to `install the vagrant-salt plugin <https://github.com/saltstack/salty-vagrant>`_ to get the Salt provisioner.
+    you will have to install the `vagrant-salt plugin`_ to get the Salt provisioner.
 
 Download phagescan onto your host by cloning the phagescan git repo::
 
@@ -147,7 +157,7 @@ We have yet to automate these steps, so you'll have to do it manually.
     [phagedev]$ python manage.py migrate --settings=scaggr.settings
     [phagedev]$ python manage.py createcachetable --settings=scaggr.settings cache
 
-2. Copy the appropriate config files to the [Project_root_dir]::
+2. Copy the appropriate Celery config files to the [Project_root_dir]::
 
     [phagedev]$ cp installation/scanmaster/masterceleryconfig.py masterceleryconfig.py
     [phagedev]$ cp installation/scanmaster/resultsceleryconfig.py resultsceleryconfig.py
