@@ -171,23 +171,23 @@ they match your directory structure.
 
 The following shows what those variables will look like if you use the defaults provided above::
 
-file_roots:
-  base:
-    - /srv/phagescan/installation/salt-masterless/salt
-  media:
-    - /srv/install-media
-  lic:
-    - /srv/licenses
+    file_roots:
+      base:
+        - /srv/phagescan/installation/salt-masterless/salt
+      media:
+        - /srv/install-media
+      lic:
+        - /srv/licenses
 
-pillar_roots:
-  base:
-    - /srv/pillar
+    pillar_roots:
+      base:
+        - /srv/pillar
 
 
-#gitfs_remotes:
-#  - git+ssh://git@github.com/myuser/phagescan.git
+    #gitfs_remotes:
+    #  - git+ssh://git@github.com/myuser/phagescan.git
 
-#gitfs_root: installation/salt-masterless/salt
+    #gitfs_root: installation/salt-masterless/salt
 
 
 There is no need to change the files in /srv/phagescan, so if you ever want to pull down updated versions of
