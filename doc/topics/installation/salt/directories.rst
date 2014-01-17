@@ -77,7 +77,13 @@ would look like this::
       - git+ssh://git@github.com/myuser/salt-states.git
       - git+ssh://git@github.com/myuser/my-lic.git
 
-The user running the salt master must have an ssh key connected with the repository.
+* The user running the salt master must have an ssh key connected with the repository.
+* Each of your git repos must have a single branch in it that is named to match the `env` name that you use in top.sls::
+
+    'lic' for licenses
+    'media' for install-media
+    'master' for states
+    'master' for pillar
 
 Lastly, install the python module GitPython >= 0.3.0 and after you restart the salt-master,
 the gitfs remote file sources will be active. (they are cached locally, but checked each time
