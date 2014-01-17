@@ -8,6 +8,8 @@ Table of Contents
    index
    topics/installation/index
    topics/installation/salt/*
+   topics/installation/scanmaster/*
+   topics/installation/scanworker/*
    topics/phagescanUI/*
    topics/master/index
    topics/workers/index
@@ -16,8 +18,6 @@ Table of Contents
    topics/development/*
    topics/installation/dev/*
    topics/troubleshooting/*
-
-
 
 Indices and tables
 ==================

@@ -1,4 +1,3 @@
-.. this file replaces /installation/dev/README.vagrant-intellij
 
 .. _`PyCharm`: http://www.jetbrains.com/pycharm/
 

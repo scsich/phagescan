@@ -1,5 +1,3 @@
-.. this file replaces /installation/dev/INSTALL
-
 =============================
 Manually Build Development VM
 =============================
@@ -81,16 +79,16 @@ Collect Static files::
 
     (psvirtualenv)$ python manage.py collectstatic
 
+Update scaggr/settings.py.
+
+* Set DEBUG is True
+* Update the BROKER_CONF values to match the user and vhost values we configured in the rabbitmq step above.
+
 Start the celery processes, each in separate terminals::
 
     (psvirtualenv)$ DJANGO_SETTINGS_MODULE=scaggr.settings celeryd --config=masterceleryconfig -E -B -l info --hostname=master.master
     (psvirtualenv)$ DJANGO_SETTINGS_MODULE=scaggr.settings celeryd --config=resultsceleryconfig -E -B -l info --hostname=master.results
     (psvirtualenv)$ DJANGO_SETTINGS_MODULE=scaggr.settings celeryd --config=periodicceleryconfig -E -B -l info --hostname=master.periodic
-
-Update settings.py.
-
-* Set DEBUG is True
-* Update the BROKER_CONF values to match the user and vhost values we configured in the rabbitmq step above.
 
 Start the django development web server.
 
@@ -108,13 +106,16 @@ Start the Celery Worker::
 
     (psvirtualenv)$ celeryd --config=workerceleryconfig -E -l INFO -n worker
 
-Now we have the Django Web Interface listening on port 8000 in the VM, which is mapped to port 8090 on your host.
-To connect to the django instance::
+Now we have the Django Web Interface listening on port 8000 on your host.
+To connect to the Django Web User Interface::
 
-    From your host: http://localhost:8090
-    From other vagrant vms: http://192.168.33.10:8000
+    http://localhost:8000
 
 Login to the Django Web User Interface with the django superuser user/password that you created.
+
+You can reach the Admin interface by going to::
+
+    http://localhots:8000/admin/
 
 ----
 

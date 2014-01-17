@@ -1,6 +1,3 @@
-.. this file replaces /installation/dev/INSTALL.vagrant-salt
-.. TODO: merge the content from /installation/dev/README.vagrant-multiple-vms into this doc as well.
-
 =====================
 Phagescan Development
 =====================
@@ -57,7 +54,7 @@ For your Python SDK, you have the choice of working with an SDK that is located 
 an SDK that is local to you development host. The following two sections walk you through those options.
 
 Remote Python SDK in VirtualEnv in a Vagrant VM
-----------------------------------------
+-----------------------------------------------
 
 .. _`PyCharm`: http://www.jetbrains.com/pycharm/
 
@@ -83,12 +80,6 @@ Install necessary OS packages::
     If running Ubuntu:
     $ sudo apt-get install $(< [Project_root_dir]/PACKAGES.ubuntu)
     $ sudo apt-get install $(< [Project_root_dir]/installation/scanmaster/PACKAGES.ubuntu)
-
-    If running CentOS:
-
-    We only used CentOS as a scanworker. So, skip the rest of this document
-    and refer to the CentOS scanworker INSTALL instructions:
-    [Project_root_dir]/installation/scanworker/INSTALL.CentOS
 
 Build & activate a virtual environment::
 

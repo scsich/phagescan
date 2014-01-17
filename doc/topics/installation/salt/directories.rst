@@ -1,8 +1,3 @@
-.. this file replaces /installation/README and /installation/salt-masterless/README
-
-.. talk about which directories are needed.
-.. talk about where to put those dirs
-.. talk about how to make them automatically/manually
 
 .. _`Salt's Documentation`: http://docs.saltstack.com/
 .. _`Salt gitfs reference`: http://docs.saltstack.com/topics/tutorials/gitfs.html

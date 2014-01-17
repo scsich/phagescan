@@ -1,11 +1,9 @@
-.. this file replaces the root /INSTALL file
 
 .. _`VirtualBox website`: https://www.virtualbox.org/wiki/Downloads
 .. _`Ubuntu VirtualBox help`: https://help.ubuntu.com/community/VirtualBox/Installation
 .. _`Vagrantup website`: http://www.vagrantup.com/
 .. _`Salt provisioner`: http://docs.vagrantup.com/v2/provisioning/salt.html
 .. _`vagrant-salt plugin`: https://github.com/saltstack/salty-vagrant
-
 
 ============
 Installation
@@ -227,14 +225,30 @@ Some final notes.
    e. You need to restart the Master and Worker celery services after adding a new engine.
 
 
-Building Additional ScanWorkers
-===============================
+Building A Single Master or Worker
+==================================
+
+Master
+------
+
+We have partially completed the Salt states to build a scan master, but for now, you should do it manually.
+To manually build a scan master, the following instructions will guide you:
+
+* :doc:`Ubuntu </topics/installation/scanmaster/ubuntu_m>`
+
+
+Worker
+------
 
 ScanWorkers can be Ubuntu, CentOS, or Windows VMs. Ubuntu instructions were tested on 12.04 x86_64, Desktop edition.
 CentOS instructions were tested on 6.3 x86_64 and 6.4 x86_64.
 Windows instructions were tested on Windows XP SP3.
 
 We have Salt states to automatically build Ubuntu and CentOS Workers, but Windows scanworkers require a fully manual build.
+To use Salt states to automatically build Ubuntu and CentOS workers, select the `uworker` or `cworker`
+VMs from Vagrant and start them up. They will build to a base Worker with no engines installed, so you'll simply have to add engines to them.
+
+To manually build a scan worker, the following instructions will guide you:
 
 * :doc:`Ubuntu </topics/installation/scanworker/ubuntu_w>`
 * :doc:`CentOS </topics/installation/scanworker/centos_w>`
