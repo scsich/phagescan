@@ -10,11 +10,9 @@ Build Production Worker VMs with Salt
 This document describes how to use Salt and the states in salt-masterless/salt
 to build VMs for your production environment.
 
-In order to use Salt to build production VMs, you need to first build a Salt Master.
-These instructions will have you first build a Salt Master VM, and then
-we will use the Salt Master to automatically build Production Scan Worker VMs.
+These instructions will have you first build a  `Salt`_ Master, and then
+use the Salt Master to automatically build Production Scan Worker VMs.
 
-To build Productions VMs, you need a `Salt`_ Master.
 You can build a Salt Master Manually or with Vagrant.
 The following instructions walk you through both options.
 
@@ -165,8 +163,24 @@ For settings.sls, make sure to at least update `ps_root` and any usernames and p
 * Note: ps_root is the Phagescan root as it will exist on other Worker VMs, not the Salt Master.
 * Refer to the :doc:`Salt Master Directories </topics/installation/salt/directories>` docs for guidance.
 
+Now, update the file permissions and ownership for each of the /srv/ directories.
+They should be owned by the same user that the Salt-Master service is run as; generally 'salt'.
+They should NOT be editable by other users. And pillar should NOT be readable/editable by other users.
+To make it simple, make salt the owner and group and remove access for all other users.
+
+::
+
+    $ sudo chown -R salt:salt /srv/phagescan
+    $ sudo chmod -R o-rwx /srv/phagescan
+    $ sudo chown -R salt:salt /srv/pillar
+    $ sudo chmod -R o-rwx /srv/pillar
+    $ sudo chown -R salt:salt /srv/licenses
+    $ sudo chmod -R o-rwx /srv/licenses
+    $ sudo chown -R salt:salt /srv/install-media
+    $ sudo chmod -R o-rwx /srv/install-media
+
 Update the Salt master config ``/etc/salt/master``.
-Most importantly, you should update the variables: file_roots, pillar_roots, and git_remotes to ensure
+Most importantly, you should update the variables: file_roots, pillar_roots, gitfs_root, and gitfs_remotes to ensure
 they match your directory structure.
 
 The following shows what those variables will look like if you use the defaults provided above::
@@ -183,15 +197,15 @@ The following shows what those variables will look like if you use the defaults 
       base:
         - /srv/pillar
 
-
     #gitfs_remotes:
     #  - git+ssh://git@github.com/myuser/phagescan.git
 
     #gitfs_root: installation/salt-masterless/salt
 
-
-There is no need to change the files in /srv/phagescan, so if you ever want to pull down updated versions of
-those files, you can do a git pull.
+If you ever want to get updated versions of the files in /srv/phagescan, you can do a git pull.
+In that case, you'll want to re-run ``dev/vagrant_prep.py``.
+It will create the updated .zip files for the master and worker code
+and place them into the respective install-media dirs as previously configured.
 
 Restart salt-master service::
 
