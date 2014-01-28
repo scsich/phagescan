@@ -135,12 +135,12 @@ Start the celery processes each in separate terminals::
 Start the django development web server::
 
     Run as same user that you used to start the 3 celeryd processes.
-    [avuser@host]$ python manage.py runserver -v 3 127.0.0.1:8000 --settings=scaggr.settings
+    [avuser@host]$ python manage.py runserver -v 3 127.0.0.1:9000 --settings=scaggr.settings
 
 You can now access the Phagescan Web User Interface::
 
-    http://127.0.0.1:8000
-    http://127.0.0.1:8000/admin
+    http://127.0.0.1:9000
+    http://127.0.0.1:9000/admin
 
 Optional production extras:
 

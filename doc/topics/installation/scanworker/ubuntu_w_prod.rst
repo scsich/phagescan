@@ -12,6 +12,7 @@ Prepare your Base VM
 ====================
 
 Create the base VM in any way that you desire.
+
 * Use the "Basic Server Install" option and install all updates.
 * Use the hostname ``prod.worker.ubuntu`` to take advantage of default Salt Master configuration settings.
 * The vm/host **must have 2GB of RAM** or more.
