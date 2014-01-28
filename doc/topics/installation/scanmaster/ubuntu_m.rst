@@ -144,8 +144,12 @@ You can now access the Phagescan Web User Interface::
 
 Optional production extras:
 
-* To automatically start celeryd processes, you can use init.d scripts. See installation/salt-masterless/salt/celery for reference versions.
+* To automatically start celeryd processes, you can use init.d scripts.
+  See installation/salt-masterless/salt/celery/master for reference versions.
 * To automatically start django on boot, you can use gunicorn or supervisord.
+  See installation/salt-masterless/salt/[gunicorn|supervisord] for reference versions.
 * In production, you should have a full webserver in front of Django: apache or nginx.
+  The step that processed installation/scanmaster/PACKAGE.ubuntu, installs Nginx by default.
+  See installation/salt-masterless/salt/[nginx] for reference configs.
 * In production, you should enable the EngineActiveMarkerTask periodic task in virusscan/tasks.py.
 * Also, schedule update_definitions to run periodically. virusscan/models.py:ScannerType.update_definitions().

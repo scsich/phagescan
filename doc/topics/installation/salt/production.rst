@@ -8,9 +8,9 @@ Build Production Worker VMs with Salt
 =====================================
 
 This document describes how to use Salt and the states in salt-masterless/salt
-to build VMs for your production environment.
+to build Ubuntu and CentOS VMs for your production environment.
 
-These instructions will have you first build a  `Salt`_ Master, and then
+In these instructions, you first build a  `Salt`_ Master, and then
 use the Salt Master to automatically build Production Scan Worker VMs.
 
 You can build a Salt Master Manually or with Vagrant.
@@ -83,6 +83,8 @@ This is the more secure option, but takes longer.
 
 These instructions assume you are using an Ubuntu host/VM as your Salt Master.
 However, you can use any OS that is supported by `Salt`_.
+
+This host is typically named `salt`.
 
 First, install the Salt Master software.
 Refer to the `Salt Install`_ docs for instructions to do that.
@@ -214,6 +216,30 @@ Restart salt-master service::
 Once you restart the salt-master service, you can start using salt to build scanworkers.
 
 
-Build Production Scan Worker VMs
-================================
+Build Production Scan Worker VMs with Salt
+==========================================
+
+Now that we have a Salt Master setup, we can move on and build the Scan Worker VMs.
+We cannot use Salt to build a WinXP VM and we have not added the ability to build newer Windows VMs either.
+Thus, this currently applies to Ubuntu and CentOS.
+
+To set ourselves up for success, we need to ensure that the hostname of our VMs is known by the Salt Master.
+There are three files on the Salt Master that need the hostname or at least a regex pattern that will match the hostname:
+
+1. autosign.conf
+2. pillar/top.sls
+3. salt/top.sls
+
+By default, these files are setup to recognize two patterns::
+
+    prod.worker*
+    .*-.*-.*-.*-.*
+
+The first can be used to name a host something like ``prod.worker.ubuntu`` or ``prod.worker.centos``.
+The second can be used when a hostname is a UUID.
+
+Knowing that, build your Scan Workers:
+
+:doc:`Ubuntu Scan Worker </topics/installation/scanworker/ubuntu_w_prod>`
+:doc:`CentOS Scan Worker </topics/installation/scanworker/centos_w_prod>`
 

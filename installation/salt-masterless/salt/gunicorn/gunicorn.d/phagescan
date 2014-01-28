@@ -1,0 +1,19 @@
+CONFIG = {
+    'mode': 'django',
+    'environment': {
+        #'PYTHONHOME': '/opt/psvirtualenv',
+    },
+    'working_dir': '/opt/phagescan',
+    'python': '/opt/psvirtualenv/bin/python',
+    'user': 'avuser',
+    'group': 'avuser',
+    'args': (
+        '--bind=127.0.0.1:9000',
+        '--workers=4',
+	'--timeout=120',
+        '--log-level=info',
+        '--error-logfile=/opt/phagescan/logs/ps.error.log',
+        '--access-logfile=/opt/phagescan/logs/ps.access.log',
+#	'--pythonpath=/opt/phagescan',
+    ),
+}

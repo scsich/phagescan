@@ -1,16 +1,15 @@
 master-celeryd-defaults:
   file.managed:
-    - name: /etc/default/celeryd
-    - source: salt://celery/master/celeryd
-    - template: jinja
+    - name: /etc/default/celeryd-master
+    - source: salt://celery/master/default/celeryd-master
     - user: root
     - group: root
     - mode: 644
 
 master-celeryd-init:
   file.managed:
-    - name: /etc/init.d/celeryd
-    - source: salt://celery/master/celeryd.initd
+    - name: /etc/init.d/celeryd-master
+    - source: salt://celery/master/init.d/celeryd-master
     - user: root
     - group: root
     - mode: 755
@@ -18,36 +17,66 @@ master-celeryd-init:
 master-celeryconfig-copy:
   file.copy:
     - name: {{ pillar['ps_root'] }}/masterceleryconfig.py
-    - source: {{ pillar['ps_root'] }}/installation/scanworker/masterceleryconfig.py
+    - source: {{ pillar['ps_root'] }}/installation/scanmaster/masterceleryconfig.py
     - force: True
 
-celeryconfig-master-username:
-  file.sed:
-    - name: {{ pillar['ps_root'] }}/masterceleryconfig.py
-    - before: 'phagemasteruser'
-    - after: '{{ pillar['mq_master_user_name'] }}'
-    - limit: "^  'uid' 	: "
-    - requre:
-      - file: master-celeryconfig-copy
+periodic-celeryd-defaults:
+  file.managed:
+    - name: /etc/default/celeryd-periodic
+    - source: salt://celery/master/default/celeryd-periodic
+    - user: root
+    - group: root
+    - mode: 644
 
-celeryconfig-master-password:
-  file.sed:
-    - name: {{ pillar['ps_root'] }}/masterceleryconfig.py
-    - before: 'longmasterpassword'
-    - after: '{{ pillar['mq_master_user_passwd'] }}'
-    - limit: "^  'pass' 	: "
-    - requre:
-      - file: master-celeryconfig-copy
+periodic-celeryd-init:
+  file.managed:
+    - name: /etc/init.d/celeryd-periodic
+    - source: salt://celery/master/init.d/celeryd-periodic
+    - user: root
+    - group: root
+    - mode: 755
 
-celeryconfig-master-vhost:
-  file.sed:
-    - name: {{ pillar['ps_root'] }}/masterceleryconfig.py
-    - before: 'phage'
-    - after: '{{ pillar['mq_master_vhost_name'] }}'
-    - requre:
-      - file: master-celeryconfig-copy
+periodic-celeryconfig-copy:
+  file.copy:
+    - name: {{ pillar['ps_root'] }}/periodicceleryconfig.py
+    - source: {{ pillar['ps_root'] }}/installation/scanmaster/periodicceleryconfig.py
+    - force: True
 
-celeryd:
+result-celeryd-defaults:
+  file.managed:
+    - name: /etc/default/celeryd-result
+    - source: salt://celery/master/default/celeryd-result
+    - user: root
+    - group: root
+    - mode: 644
+
+result-celeryd-init:
+  file.managed:
+    - name: /etc/init.d/celeryd-result
+    - source: salt://celery/master/init.d/celeryd-result
+    - user: root
+    - group: root
+    - mode: 755
+
+result-celeryconfig-copy:
+  file.copy:
+    - name: {{ pillar['ps_root'] }}/resultsceleryconfig.py
+    - source: {{ pillar['ps_root'] }}/installation/scanmaster/resultsceleryconfig.py
+    - force: True
+
+celeryd-result:
+  service:
+    - running
+    - enable: True
+    - order: last
+
+celeryd-periodic:
+  service:
+    - running
+    - enable: True
+    - order: last
+
+celeryd-master:
   service:
     - running
     - enable: True
