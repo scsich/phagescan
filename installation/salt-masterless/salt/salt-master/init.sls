@@ -1,5 +1,5 @@
 include:
- - baseline.common
+ - baseline.os
 
 salt-master:
   pkg.installed

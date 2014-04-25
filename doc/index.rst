@@ -1,4 +1,5 @@
-# phagescan
+What is Phagescan?
+==================
 
 Phagescan is an open source virus scan aggregator for all you malware analysts and infosec types.
 It is designed to be an in-house replacement/augment for some cloud based services out there.
@@ -9,39 +10,55 @@ The current code allows you to:
 * Add new engines/analysis tools by writing a thin Python wrapper (tools can run on Linux or Windows VMs)
 * Isolate and monitor your "worker" VMs which actually execute the engines and perform scans (Openstack or EC2)
 
-# Discussion
-Our mailing list is here:
+Quick Start
+===========
 
-[PhageScan Google Group](https://groups.google.com/forum/#!forum/phagescan)
+The fastest way to get started is to follow the steps in our :doc:`Quick Installation Guide </topics/installation/index>`.
 
-# What do I need?
+What do I need?
+===============
 
 * Python 2.7
-* Django >=1.5
+* Django >=1.5, <1.6
 * Ubuntu 12.04 recommended for Master
 * At least one scanner listed in the engines directory
 
 Please note that some of engine adapters are commercial. This means you'll need to buy your own licenses or find trial
 versions to test things out.
-We have extensive experience in setting up custom installs of this project and you can contact us via the info on our site:
-[Contact Narf](https://narfindustries.com/index.php?id=contact)
+We have extensive experience in setting up custom installs of this project and you can contact us via the `contact info`_ on our site.
 
-If you're developing on this project we *highly* recommend [Pycharm](http://www.jetbrains.com/pycharm/) and [Vagrant](http://www.vagrantup.com/).
+If you're developing on this project we *highly* recommend `Pycharm`_ and `Vagrant`_.
 Maintaining a development environment and scanners on your box for development is a pain.
 
+.. _`contact info`: https://narfindustries.com/index.php?id=contact
+.. _`Pycharm`: http://www.jetbrains.com/pycharm/
+.. _`Vagrant`: http://www.vagrantup.com/
 
-# High-level Design
+Getting Help
+============
+
+* Check out our extensive :doc:`documentation </contents>`.
+* Look us up on the `PhageScan Google Group`_.
+
+.. _`PhageScan Google Group`: https://groups.google.com/forum/#!forum/phagescan
+
+
+High-level Design
+=================
 
 Phagescan is split up into two major components: a scan master and multiple scan workers.
-The workers receive jobs from the master through rabbitMQ and the awesome [Celery](https://github.com/celery/celery) framework
+The workers receive jobs from the master through rabbitMQ and the awesome `Celery`_ framework
 for RPC.
 Currently, samples are pushed across the Queue although this can be adapted to different storage models.
 This means that both the master and worker can be isolated from the Internet.
 It also means that just the workers can be isolated from the Internet.
 We're also working on functionality to update the workers online and then move them (one-way) to an Isolated network
- where they do their scanning.
+where they do their scanning.
 
-## Scan Master
+.. _`Celery`: https://github.com/celery/celery
+
+Scan Master
+-----------
 
 This is the front end of Phagescan that houses the samples and the web interface and is responsible for the following tasks:
 
@@ -56,10 +73,10 @@ everything moving.
 The master is the only architectural entity that has permanent access to both the samples and the Postgres database.
 Postgresql is being used as the DB backend and is being accessed through Django's ORM.
 Postgres is required at this point because we're using the hstore extension to store arbitrary Key/value pairs from the
- scan results.
+scan results.
 
-
-## Scan Workers
+Scan Workers
+------------
 
 This is the backend of the system and can scale horizontally.
 Each scan worker is a VM that has one or more scan engines (e.g. ClamAV, PEID) loaded on it.
@@ -71,7 +88,8 @@ Check out the the AbstractEvilnessEngine or AbstractMDEngine classes and other c
 Please note that both the master and workers need to have the same engines directory.
 
 
-# Types of Engines
+Types of Engines
+----------------
 
 We have two types of "scan engines" from above.
 They are: evilness engines and metadata engines.
@@ -82,6 +100,4 @@ An evilness engine does make a judgement on a file's good/bad state and needs to
 indicating infection and a string indicating the type of infection.
 The evilness engine can also provide an arbitrary Python dict back to the scan master which contains any other traits
 that need to be stored in the DB for later retrieval/analysis.
-
-
 
