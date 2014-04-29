@@ -9,6 +9,9 @@ The current code allows you to:
 * Add new engines/analysis tools by writing a thin Python wrapper (tools can run on Linux or Windows VMs)
 * Isolate and monitor your "worker" VMs which actually execute the engines and perform scans (Openstack or EC2)
 
+# Quick Start
+The fastest way to get started is to follow the steps in our [Quick Installation Guide](http://phagescan.readthedocs.org/en/latest/topics/installation/index.html) in the [Phagescan docs](http://phagescan.readthedocs.org/en/latest/index.html).
+
 # Discussion
 Our mailing list is here:
 
